@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_search"
-        android:name="com.rafaelboban.pokedex.SearchFragment"
+        android:name="com.rafaelboban.pokedex.ui.SearchFragment"
         android:label="@string/nav_search"
         tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/navigation_favorites"
-        android:name="com.rafaelboban.pokedex.FavoritesFragment"
+        android:name="com.rafaelboban.pokedex.ui.FavoritesFragment"
         android:label="@string/nav_favorites"
         tools:layout="@layout/fragment_favorites" />
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.rafaelboban.pokedex.SettingsFragment"
+        android:name="com.rafaelboban.pokedex.ui.SettingsFragment"
         android:label="@string/nav_settings"
         tools:layout="@layout/fragment_settings" />
 
