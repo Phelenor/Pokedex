@@ -45,4 +45,6 @@
     <color name="flat_base_stats_05_sp_def">#61c52e</color>
     <color name="flat_base_stats_06_speed">#f879dd</color>
     <color name="flat_neutral_background">#801c1f22</color>
+    <color name="tint_primary_variant">#c99501</color>
+    <color name="tint_primary_variant_pokemon">#f2f2f2</color>
 </resources>
