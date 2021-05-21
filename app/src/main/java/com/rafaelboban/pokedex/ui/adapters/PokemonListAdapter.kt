@@ -1,8 +1,11 @@
 package com.rafaelboban.pokedex.ui.adapters
 
+import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +35,19 @@ class PokemonListAdapter : PagingDataAdapter<Pokemon, PokemonListAdapter.Pokemon
             fun bind(pokemon: Pokemon) {
 
                 binding.apply {
-                    pokemonImage.load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png")
+
+                    pokemonImage.load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png") {
+                        listener(
+                            onStart = {
+                                imageLoadProgressbar.visibility = View.VISIBLE
+                                pokemonImage.visibility = View.GONE
+                            },
+                            onSuccess = { _, _ ->
+                                imageLoadProgressbar.visibility = View.GONE
+                                pokemonImage.visibility = View.VISIBLE
+                            }
+                        )
+                    }
                     pokemonName.text = pokemon.name.capitalize()
                     pokemonId.text = pokemon.id.toString()
                 }
