@@ -1,31 +1,44 @@
 package com.rafaelboban.pokedex.ui
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.rafaelboban.pokedex.databinding.FragmentSearchBinding
-import com.rafaelboban.pokedex.viewmodels.SearchViewModel
+import com.rafaelboban.pokedex.ui.adapters.PokemonListAdapter
+import com.rafaelboban.pokedex.ui.viewmodels.SearchViewModel
 
 class SearchFragment : Fragment() {
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModels<SearchViewModel>()
     private lateinit var binding: FragmentSearchBinding
+    private lateinit var adapter: PokemonListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(layoutInflater)
+        adapter = PokemonListAdapter()
+
+        binding.apply {
+            recyclerViewMain.setHasFixedSize(false)
+            recyclerViewMain.layoutManager = LinearLayoutManager(requireContext())
+            recyclerViewMain.adapter = adapter
+        }
+
+        setupObservers()
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
-        // TODO: Use the ViewModel
+    private fun setupObservers() {
+        viewModel.getPokemon().observe(viewLifecycleOwner) {
+            adapter.submitData(viewLifecycleOwner.lifecycle, it)
+        }
     }
-
 }

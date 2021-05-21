@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.rafaelboban.pokedex.R
-import com.rafaelboban.pokedex.viewmodels.FavoritesViewModel
+import com.rafaelboban.pokedex.ui.viewmodels.FavoritesViewModel
 
 class FavoritesFragment : Fragment() {
 
