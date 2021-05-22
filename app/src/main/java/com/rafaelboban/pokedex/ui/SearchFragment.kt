@@ -1,19 +1,20 @@
 package com.rafaelboban.pokedex.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.rafaelboban.pokedex.databinding.FragmentSearchBinding
 import com.rafaelboban.pokedex.ui.adapters.PokemonListAdapter
 import com.rafaelboban.pokedex.ui.adapters.PokemonListLoadStateAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.SearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private val viewModel by viewModels<SearchViewModel>()
@@ -35,13 +36,33 @@ class SearchFragment : Fragment() {
                 footer = PokemonListLoadStateAdapter { adapter.retry() }
             )
         }
-
+        setupListeners()
         setupObservers()
         return binding.root
     }
 
+
+    private fun setupListeners() {
+        val searchView = binding.toolbarSearch.searchview as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    binding.recyclerViewMain.scrollToPosition(0)
+                    viewModel.searchPokemon(query)
+                    searchView.clearFocus()
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+
+        })
+    }
+
     private fun setupObservers() {
-        viewModel.getPokemon().observe(viewLifecycleOwner) {
+        viewModel.pokemon.observe(viewLifecycleOwner) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
     }
