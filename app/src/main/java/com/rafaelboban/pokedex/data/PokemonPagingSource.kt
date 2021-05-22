@@ -4,15 +4,16 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.rafaelboban.pokedex.api.ApiService
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.PokemonId
 import retrofit2.HttpException
 import java.io.IOException
 
 private const val POKEMON_STARTING_PAGE_INDEX = 0
 
 class PokemonPagingSource(private val apiService: ApiService,
-                          private val query: String = "") : PagingSource<Int, Pokemon>() {
+                          private val query: String = "") : PagingSource<Int, PokemonId>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonId> {
         val position = params.key ?: POKEMON_STARTING_PAGE_INDEX
 
         return try {
@@ -37,7 +38,7 @@ class PokemonPagingSource(private val apiService: ApiService,
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Pokemon>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, PokemonId>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)

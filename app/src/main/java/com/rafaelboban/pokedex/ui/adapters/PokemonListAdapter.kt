@@ -12,8 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.rafaelboban.pokedex.databinding.CardPokemonItemBinding
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.PokemonId
+import com.rafaelboban.pokedex.utils.extractId
+import com.rafaelboban.pokedex.utils.getSprite
 
-class PokemonListAdapter : PagingDataAdapter<Pokemon, PokemonListAdapter.PokemonViewHolder>(POKEMON_COMPARATOR) {
+class PokemonListAdapter : PagingDataAdapter<PokemonId, PokemonListAdapter.PokemonViewHolder>(POKEMON_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         val binding = CardPokemonItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,7 +27,6 @@ class PokemonListAdapter : PagingDataAdapter<Pokemon, PokemonListAdapter.Pokemon
         val current = getItem(position)
 
         if (current != null) {
-            current.id = position + 1
             holder.bind(current)
         }
     }
@@ -32,11 +34,9 @@ class PokemonListAdapter : PagingDataAdapter<Pokemon, PokemonListAdapter.Pokemon
     class PokemonViewHolder(private val binding: CardPokemonItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-            fun bind(pokemon: Pokemon) {
-
+            fun bind(pokemon: PokemonId) {
                 binding.apply {
-
-                    pokemonImage.load("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png") {
+                    pokemonImage.load(pokemon.getSprite()) {
                         listener(
                             onStart = {
                                 imageLoadProgressbar.visibility = View.VISIBLE
@@ -49,17 +49,17 @@ class PokemonListAdapter : PagingDataAdapter<Pokemon, PokemonListAdapter.Pokemon
                         )
                     }
                     pokemonName.text = pokemon.name.capitalize()
-                    pokemonId.text = pokemon.id.toString()
+                    pokemonId.text = pokemon.url.extractId().toString().padStart(3, '0')
                 }
             }
     }
 
     companion object {
-        private val POKEMON_COMPARATOR = object  : DiffUtil.ItemCallback<Pokemon>() {
-            override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean =
+        private val POKEMON_COMPARATOR = object  : DiffUtil.ItemCallback<PokemonId>() {
+            override fun areItemsTheSame(oldItem: PokemonId, newItem: PokemonId): Boolean =
                 oldItem.name == newItem.name
 
-            override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean =
+            override fun areContentsTheSame(oldItem: PokemonId, newItem: PokemonId): Boolean =
                 oldItem == newItem
         }
     }

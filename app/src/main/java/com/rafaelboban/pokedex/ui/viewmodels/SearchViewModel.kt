@@ -8,17 +8,18 @@ import androidx.paging.cachedIn
 import com.rafaelboban.pokedex.api.RetrofitBuilder
 import com.rafaelboban.pokedex.data.PokemonRepository
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.PokemonId
 
 class SearchViewModel() : ViewModel() {
     private val repository = PokemonRepository(RetrofitBuilder.apiService)
-    private var pokemonListCurrent: LiveData<PagingData<Pokemon>>? = null
+    private var pokemonListCurrent: LiveData<PagingData<PokemonId>>? = null
 
     init {
         getPokemon()
     }
 
 
-    fun getPokemon(): LiveData<PagingData<Pokemon>> {
+    fun getPokemon(): LiveData<PagingData<PokemonId>> {
         val lastResult = pokemonListCurrent
         if (lastResult != null) {
             return lastResult

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rafaelboban.pokedex.databinding.FragmentSearchBinding
 import com.rafaelboban.pokedex.ui.adapters.PokemonListAdapter
+import com.rafaelboban.pokedex.ui.adapters.PokemonListLoadStateAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.SearchViewModel
 
 class SearchFragment : Fragment() {
@@ -29,7 +30,10 @@ class SearchFragment : Fragment() {
         binding.apply {
             recyclerViewMain.setHasFixedSize(false)
             recyclerViewMain.layoutManager = LinearLayoutManager(requireContext())
-            recyclerViewMain.adapter = adapter
+            recyclerViewMain.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = PokemonListLoadStateAdapter { adapter.retry() },
+                footer = PokemonListLoadStateAdapter { adapter.retry() }
+            )
         }
 
         setupObservers()
