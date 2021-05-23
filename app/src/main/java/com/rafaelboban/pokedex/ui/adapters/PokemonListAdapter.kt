@@ -41,11 +41,19 @@ class PokemonListAdapter : PagingDataAdapter<PokemonId, PokemonListAdapter.Pokem
                             onStart = {
                                 imageLoadProgressbar.visibility = View.VISIBLE
                                 pokemonImage.visibility = View.GONE
+                                imagePlaceholder.visibility = View.GONE
                             },
                             onSuccess = { _, _ ->
                                 imageLoadProgressbar.visibility = View.GONE
                                 pokemonImage.visibility = View.VISIBLE
+                                imagePlaceholder.visibility = View.GONE
+                            },
+                            onError = { _, _ ->
+                                imageLoadProgressbar.visibility = View.GONE
+                                pokemonImage.visibility = View.GONE
+                                imagePlaceholder.visibility = View.VISIBLE
                             }
+
                         )
                     }
                     pokemonName.text = pokemon.name.capitalize()

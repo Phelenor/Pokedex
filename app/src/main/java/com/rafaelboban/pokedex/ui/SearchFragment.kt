@@ -31,6 +31,7 @@ class SearchFragment : Fragment() {
         adapter = PokemonListAdapter()
 
         binding.apply {
+            recyclerViewMain.itemAnimator = null
             recyclerViewMain.setHasFixedSize(false)
             recyclerViewMain.layoutManager = LinearLayoutManager(requireContext())
             recyclerViewMain.adapter = adapter.withLoadStateHeaderAndFooter(
@@ -50,7 +51,7 @@ class SearchFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
                     binding.recyclerViewMain.scrollToPosition(0)
-                    viewModel.searchPokemon(query)
+                    viewModel.searchPokemon(query.trim())
                     searchView.clearFocus()
                 }
                 return true

@@ -12,13 +12,13 @@ const val NETWORK_PAGE_SIZE = 20
 @Singleton
 class PokemonRepository @Inject constructor(private val apiService: ApiService) {
 
-    fun getPokemon(query: String) =
+    fun getPokemon() =
         Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
                 maxSize = 100,
                 enablePlaceholders = true
             ),
-            pagingSourceFactory = { PokemonPagingSource(apiService, query) }
+            pagingSourceFactory = { PokemonPagingSource(apiService) }
         ).liveData
 }
