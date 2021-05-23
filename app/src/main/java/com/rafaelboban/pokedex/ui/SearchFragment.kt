@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rafaelboban.pokedex.databinding.FragmentSearchBinding
 import com.rafaelboban.pokedex.ui.adapters.PokemonListAdapter
@@ -43,7 +45,7 @@ class SearchFragment : Fragment() {
 
 
     private fun setupListeners() {
-        val searchView = binding.toolbarSearch.searchview as SearchView
+        val searchView = binding.toolbarSearch.searchview
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
@@ -59,6 +61,27 @@ class SearchFragment : Fragment() {
             }
 
         })
+
+        adapter.addLoadStateListener { loadState ->
+            binding.apply {
+                progressBarSearch.isVisible = loadState.source.refresh is LoadState.Loading
+                recyclerViewMain.isVisible = loadState.source.refresh is LoadState.NotLoading
+                errorStateSearch.root.isVisible = loadState.source.refresh is LoadState.Error
+
+                if (loadState.source.refresh is LoadState.NotLoading
+                    && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                    recyclerViewMain.isVisible = false
+                    emptyStateSearch.root.isVisible = true
+                } else {
+                    emptyStateSearch.root.isVisible = false
+                }
+            }
+        }
+
+        binding.errorStateSearch.buttonRetry.setOnClickListener {
+            adapter.retry()
+        }
+
     }
 
     private fun setupObservers() {

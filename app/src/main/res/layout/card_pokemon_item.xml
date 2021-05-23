@@ -53,12 +53,6 @@
                 app:layout_constraintStart_toStartOf="@+id/pokemon_name"
                 app:layout_constraintTop_toBottomOf="@+id/pokemon_name" />
 
-            <TextView
-                android:id="@+id/city_time_tv"
-                style="@style/BodyColdGrayLeft"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" />
-
 
             <ImageView
                 android:id="@+id/pokemon_image"

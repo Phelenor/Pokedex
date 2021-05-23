@@ -6,13 +6,13 @@ import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.rafaelboban.pokedex.databinding.PokemonListLoadStateBinding
+import com.rafaelboban.pokedex.databinding.PokemonItemLoadStateBinding
 
 class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
     LoadStateAdapter<PokemonListLoadStateAdapter.LoadStateViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder {
-        val binding = PokemonListLoadStateBinding.inflate(
+        val binding = PokemonItemLoadStateBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
         return LoadStateViewHolder(binding)
@@ -22,7 +22,7 @@ class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
         holder.bind(loadState)
     }
 
-    inner class LoadStateViewHolder(private val binding: PokemonListLoadStateBinding) :
+    inner class LoadStateViewHolder(private val binding: PokemonItemLoadStateBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
