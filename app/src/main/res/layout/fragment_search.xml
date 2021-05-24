@@ -69,7 +69,6 @@
             android:id="@+id/recycler_view_main"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="56dp"
             android:clipToPadding="false"
             android:paddingTop="16dp"
             android:paddingBottom="48dp"

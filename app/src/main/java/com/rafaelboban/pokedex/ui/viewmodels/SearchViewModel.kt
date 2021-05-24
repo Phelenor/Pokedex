@@ -31,7 +31,7 @@ class SearchViewModel @Inject constructor(
 }
 
 private fun generateFilters(query: String) = listOf<(PokemonId) -> Boolean>(
-    { query.toLowerCase() in it.name.toLowerCase() },
+    { query.lowercase() in it.name.lowercase() },
     { query == it.id.toString().padStart(3, '0') },
     { val range = query.transformToRange()
         if (range != null) {
