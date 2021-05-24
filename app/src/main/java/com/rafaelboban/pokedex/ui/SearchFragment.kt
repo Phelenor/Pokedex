@@ -10,11 +10,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.databinding.FragmentSearchBinding
 import com.rafaelboban.pokedex.ui.adapters.PokemonListAdapter
 import com.rafaelboban.pokedex.ui.adapters.PokemonListLoadStateAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -23,12 +25,16 @@ class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var adapter: PokemonListAdapter
 
+    @Inject
+    lateinit var db: PokemonDao
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(layoutInflater)
-        adapter = PokemonListAdapter()
+
+        adapter = PokemonListAdapter(db)
 
         binding.apply {
             recyclerViewMain.itemAnimator = null
@@ -39,6 +45,7 @@ class SearchFragment : Fragment() {
                 footer = PokemonListLoadStateAdapter { adapter.retry() }
             )
         }
+
         setupListeners()
         setupObservers()
         return binding.root

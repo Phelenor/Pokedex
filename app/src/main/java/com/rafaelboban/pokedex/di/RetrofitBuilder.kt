@@ -1,4 +1,4 @@
-package com.rafaelboban.pokedex.api.di
+package com.rafaelboban.pokedex.di
 
 import com.rafaelboban.pokedex.api.ApiService
 import dagger.Module
@@ -33,7 +33,6 @@ object RetrofitBuilder {
             .build()
     }
     @Provides
-    @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
 }

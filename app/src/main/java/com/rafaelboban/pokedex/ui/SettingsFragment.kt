@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.ui.viewmodels.SettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment() {
 
     companion object {

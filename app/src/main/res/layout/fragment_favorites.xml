@@ -19,6 +19,67 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ProgressBar
+        android:id="@+id/progress_bar_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_search" />
+
+        <include
+            android:id="@+id/empty_state_search"
+            layout="@layout/layout_empty_state"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="72dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_search" />
+
+        <include
+            android:id="@+id/error_state_search"
+            layout="@layout/layout_loading_failed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_search" />
+
+        <ImageView
+            android:id="@+id/initial_state_search"
+            android:layout_width="294dp"
+            android:layout_height="427dp"
+            android:layout_marginBottom="48dp"
+            android:src="@drawable/image_initial_state"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_search" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_favorites"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="56dp"
+            android:clipToPadding="false"
+            android:paddingTop="16dp"
+            android:paddingBottom="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_favorites"
+            app:layout_constraintVertical_bias="0.0" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -21,14 +21,14 @@ fun String.transformToRange(): IntRange? {
         }
         try {
             val start = range[0].toInt()
-            return start..1118
+            return start..11000
         } catch (e: Exception) {
         }
     }
     return null
 }
 
-fun PokemonId.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.url.extractId()}.png"
+fun PokemonId.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.pokemonId}.png"
 
 fun <T : Any> PagingData<T>.filterAll(filters: List<(T) -> Boolean>) =
     filter { item -> filters.any { filter -> filter(item) } }
