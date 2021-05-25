@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.databinding.FragmentFavoritesBinding
 import com.rafaelboban.pokedex.ui.adapters.FavoritesAdapter
@@ -52,7 +53,8 @@ class FavoritesFragment : Fragment() {
                 override fun onSwiped(
                     viewHolder: RecyclerView.ViewHolder,
                     direction: Int
-                ) {}
+                ) {
+                }
             }
         ItemTouchHelper(itemTouchCallback)
     }
@@ -70,6 +72,7 @@ class FavoritesFragment : Fragment() {
             recyclerViewFavorites.adapter = adapter
         }
 
+
         setupListeners()
         setupObservers()
 
@@ -80,7 +83,32 @@ class FavoritesFragment : Fragment() {
         viewModel.favoritePokemon.observe(viewLifecycleOwner, {
             adapter.apply {
                 adapter.setPokemon(it)
-                notifyDataSetChanged()
+                adapter.notifyDataSetChanged()
+            }
+        })
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+                checkEmpty()
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                super.onItemRangeRemoved(positionStart, itemCount)
+                checkEmpty()
+            }
+
+            fun checkEmpty() {
+                binding.emptyStateFavorites.root.visibility =
+                    if (adapter.itemCount == 0) View.VISIBLE else View.GONE
+                binding.toolbarFavorites.buttonEdit.visibility =
+                    if (adapter.itemCount == 0) {
+                        View.GONE
+                    } else if (adapter.itemCount != 0 && !adapter.FAVORITES_EDIT_MODE) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
             }
         })
 
@@ -129,4 +157,6 @@ class FavoritesFragment : Fragment() {
     fun startDragging(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
     }
+
+
 }

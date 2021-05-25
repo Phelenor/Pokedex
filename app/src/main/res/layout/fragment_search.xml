@@ -31,7 +31,7 @@
 
         <include
             android:id="@+id/empty_state_search"
-            layout="@layout/layout_empty_state"
+            layout="@layout/layout_empty_state_search"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="72dp"
