@@ -1,5 +1,7 @@
 package com.rafaelboban.pokedex.ui
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,8 +12,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.databinding.FragmentSearchBinding
+import com.rafaelboban.pokedex.databinding.LayoutSnackbarBinding
 import com.rafaelboban.pokedex.ui.adapters.PokemonListAdapter
 import com.rafaelboban.pokedex.ui.adapters.PokemonListLoadStateAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.SearchViewModel
@@ -37,7 +42,6 @@ class SearchFragment : Fragment() {
         adapter = PokemonListAdapter(db)
 
         binding.apply {
-            recyclerViewMain.itemAnimator = null
             recyclerViewMain.setHasFixedSize(false)
             recyclerViewMain.layoutManager = LinearLayoutManager(requireContext())
             recyclerViewMain.adapter = adapter.withLoadStateHeaderAndFooter(
@@ -75,6 +79,20 @@ class SearchFragment : Fragment() {
                 progressBarSearch.isVisible = loadState.source.refresh is LoadState.Loading
                 recyclerViewMain.isVisible = loadState.source.refresh is LoadState.NotLoading
                 errorStateSearch.root.isVisible = loadState.source.refresh is LoadState.Error
+                if (loadState.source.refresh is LoadState.Error) {
+                    val sb = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
+                    sb.view.setBackgroundColor(Color.TRANSPARENT);
+                    val sbLayout = sb.view as Snackbar.SnackbarLayout
+                    val sbBinding = LayoutSnackbarBinding.inflate(layoutInflater)
+                    sbLayout.addView(sbBinding.root, 0)
+                    sbBinding.message.text = getString(R.string.check_connection)
+                    sbBinding.message.backgroundTintList =
+                        ColorStateList.valueOf(resources.getColor(R.color.error))
+                    sbBinding.snackbarClose.setOnClickListener {
+                        sb.dismiss()
+                    }
+                    sb.show()
+                }
 
                 if (loadState.source.refresh is LoadState.NotLoading
                     && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {

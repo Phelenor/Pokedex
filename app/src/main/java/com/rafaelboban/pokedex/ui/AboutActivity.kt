@@ -2,15 +2,15 @@ package com.rafaelboban.pokedex.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.rafaelboban.pokedex.databinding.ActivityInfoBinding
+import com.rafaelboban.pokedex.databinding.ActivityAboutBinding
 
-class InfoActivity : AppCompatActivity() {
+class AboutActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityInfoBinding
+    private lateinit var binding: ActivityAboutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityInfoBinding.inflate(layoutInflater)
+        binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.title = ""

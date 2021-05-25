@@ -12,8 +12,8 @@
     <string name="language">Language</string>
     <string name="cancel">Cancel</string>
     <string name="clear">Clear</string>
-    <string name="clear_favorites_list">Clear favorites list?</string>
-    <string name="favorites_is_clear">Favorites list is clear.</string>
+    <string name="clear_favorites_list">Clear Favorites List?</string>
+    <string name="favorites_is_clear">Favorites List is Clear.</string>
     <string name="sofascore_android_academy">SofaScore Android Academy</string>
     <string name="class_2021">Class 2021</string>
     <string name="app_name_assist">App Name</string>
@@ -21,7 +21,8 @@
     <string name="pokeapi">PokeAPI</string>
     <string name="developer">Developer</string>
     <string name="dev_name">Rafael Boban</string>
-    <string name="an_error_occured">An Error Occurred.</string>
+    <string name="something_went_wrong">Oops, Something Went Wrong.</string>
     <string name="retry">Retry</string>
     <string name="favorites_are_empty">Favorites are empty.</string>
+    <string name="check_connection">Check Your Connection and Try Again.</string>
 </resources>

@@ -2,7 +2,6 @@ package com.rafaelboban.pokedex.ui
 
 import android.content.Intent
 import android.graphics.Color
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -47,7 +46,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.infoButton.setOnClickListener {
-            val intent = Intent(context, InfoActivity::class.java)
+            val intent = Intent(context, AboutActivity::class.java)
             context?.startActivity(intent)
         }
     }
@@ -64,6 +63,8 @@ class SettingsFragment : Fragment() {
         sb.view.setBackgroundColor(Color.TRANSPARENT);
         val sbLayout = sb.view as Snackbar.SnackbarLayout
         val sbBinding = LayoutSnackbarBinding.inflate(layoutInflater)
+        sbLayout.addView(sbBinding.root, 0)
+        sbBinding.message.text = getString(R.string.favorites_is_clear)
 
         sbBinding.snackbarClose.setOnClickListener {
             sb.dismiss()
@@ -71,8 +72,6 @@ class SettingsFragment : Fragment() {
 
         dialogBinding.clearButton.setOnClickListener {
             viewModel.clearFavorites()
-            sbLayout.addView(sbBinding.root, 0)
-            sbBinding.message.text = getString(R.string.favorites_is_clear)
             sb.show()
             dialog.dismiss()
         }

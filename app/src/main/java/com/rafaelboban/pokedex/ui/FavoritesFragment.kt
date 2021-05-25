@@ -1,5 +1,6 @@
 package com.rafaelboban.pokedex.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -99,16 +100,21 @@ class FavoritesFragment : Fragment() {
             }
 
             fun checkEmpty() {
-                binding.emptyStateFavorites.root.visibility =
-                    if (adapter.itemCount == 0) View.VISIBLE else View.GONE
-                binding.toolbarFavorites.buttonEdit.visibility =
-                    if (adapter.itemCount == 0) {
-                        View.GONE
-                    } else if (adapter.itemCount != 0 && !adapter.FAVORITES_EDIT_MODE) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
+                binding.apply {
+                    emptyStateFavorites.root.visibility =
+                        if (adapter.itemCount == 0) View.VISIBLE else View.GONE
+
+                    toolbarFavorites.buttonEdit.visibility =
+                        if (adapter.itemCount != 0 && !adapter.FAVORITES_EDIT_MODE) View.VISIBLE
+                        else View.GONE
+
+                    toolbarFavorites.buttonDone.visibility =
+                        if (adapter.itemCount != 0 && adapter.FAVORITES_EDIT_MODE) View.VISIBLE
+                        else {
+                            adapter.FAVORITES_EDIT_MODE = false
+                            View.GONE
+                        }
+                }
             }
         })
 
@@ -134,6 +140,7 @@ class FavoritesFragment : Fragment() {
 //        })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setupListeners() {
         binding.toolbarFavorites.buttonEdit.setOnClickListener {
             binding.toolbarFavorites.buttonEdit.visibility = View.GONE
@@ -157,6 +164,4 @@ class FavoritesFragment : Fragment() {
     fun startDragging(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
     }
-
-
 }

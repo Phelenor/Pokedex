@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/an_error_occured"
+        android:text="@string/something_went_wrong"
         app:layout_constraintEnd_toEndOf="@+id/button_retry"
         app:layout_constraintStart_toStartOf="@+id/button_retry"
         app:layout_constraintTop_toBottomOf="@+id/button_retry" />
@@ -23,6 +23,7 @@
         android:clickable="true"
         android:insetTop="0dp"
         android:insetBottom="0dp"
+        android:backgroundTint="@color/white"
         android:text="@string/retry"
         android:textAllCaps="true"
         android:textColor="@color/tint_secondary"
