@@ -26,5 +26,4 @@ class PokemonRepository @Inject constructor(
             pagingSourceFactory = { PokemonPagingSource(apiService, pokemonDao) }
         ).liveData
 
-
 }

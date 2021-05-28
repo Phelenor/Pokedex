@@ -1,6 +1,7 @@
 package com.rafaelboban.pokedex.database
 
 import androidx.room.*
+import com.rafaelboban.pokedex.model.lang.LanguageId
 import com.rafaelboban.pokedex.model.PokemonId
 
 @Dao
@@ -17,5 +18,11 @@ interface PokemonDao {
 
     @Query("DELETE FROM favorites")
     suspend fun clear()
+
+    @Query("SELECT * FROM languages")
+    suspend fun getLanguages(): MutableList<LanguageId>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLanguages(languages: MutableList<LanguageId>)
 
 }

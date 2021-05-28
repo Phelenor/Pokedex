@@ -1,14 +1,15 @@
 package com.rafaelboban.pokedex.ui
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +43,7 @@ class SearchFragment : Fragment() {
         adapter = PokemonListAdapter(db)
 
         binding.apply {
+            recyclerViewMain.itemAnimator = null
             recyclerViewMain.setHasFixedSize(false)
             recyclerViewMain.layoutManager = LinearLayoutManager(requireContext())
             recyclerViewMain.adapter = adapter.withLoadStateHeaderAndFooter(
@@ -49,6 +51,8 @@ class SearchFragment : Fragment() {
                 footer = PokemonListLoadStateAdapter { adapter.retry() }
             )
         }
+
+        viewModel.setupLanguages()
 
         setupListeners()
         setupObservers()
@@ -95,7 +99,8 @@ class SearchFragment : Fragment() {
                 }
 
                 if (loadState.source.refresh is LoadState.NotLoading
-                    && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                    && loadState.append.endOfPaginationReached && adapter.itemCount < 1
+                ) {
                     recyclerViewMain.isVisible = false
                     emptyStateSearch.root.isVisible = true
                 } else {
@@ -113,6 +118,17 @@ class SearchFragment : Fragment() {
     private fun setupObservers() {
         viewModel.pokemon.observe(viewLifecycleOwner) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
+        }
+    }
+
+    private fun setupDefaultLanguage() {
+        val sp = activity?.getPreferences(Context.MODE_PRIVATE)!!
+        with(sp.edit()) {
+            if (!sp.contains("langId")) {
+                putInt("langId", 9)
+                putString("langName", "English")
+                apply()
+            }
         }
     }
 }

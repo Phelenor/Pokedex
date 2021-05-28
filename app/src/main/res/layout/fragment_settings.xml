@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/surface_1"
@@ -41,11 +42,10 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:hint="@string/language"
-            android:textColorHint="@color/purple_500"
-            app:boxBackgroundColor="@color/surface_2"
-            app:boxStrokeColor="@color/purple_500"
-            app:endIconTint="@color/purple_500"
-            app:hintTextColor="@color/purple_500"
+            android:textColorHint="@color/tint_secondary"
+            app:boxStrokeColor="@color/cold_gray"
+            app:endIconTint="@color/tint_secondary"
+            app:hintTextColor="@color/tint_secondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
@@ -56,6 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 

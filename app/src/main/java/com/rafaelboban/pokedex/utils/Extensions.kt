@@ -1,14 +1,15 @@
 package com.rafaelboban.pokedex.utils
 
-import android.util.Range
 import androidx.paging.PagingData
 import androidx.paging.filter
 import com.rafaelboban.pokedex.model.PokemonId
-import java.lang.Exception
 
-fun String.extractId(): Int {
-    return this.substringAfter("pokemon").replace("/", "").toInt()
-}
+fun String.extractPokemonId(): Int =
+    this.substringAfter("pokemon").replace("/", "").toInt()
+
+fun String.extractLangId(): Int =
+    this.substringAfter("language").replace("/", "").toInt()
+
 
 fun String.transformToRange(): IntRange? {
     val range = this.split("-")
@@ -28,7 +29,8 @@ fun String.transformToRange(): IntRange? {
     return null
 }
 
-fun PokemonId.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.pokemonId}.png"
+fun PokemonId.getSprite() =
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.pokemonId}.png"
 
 fun <T : Any> PagingData<T>.filterAll(filters: List<(T) -> Boolean>) =
     filter { item -> filters.any { filter -> filter(item) } }

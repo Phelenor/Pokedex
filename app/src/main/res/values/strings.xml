@@ -25,4 +25,10 @@
     <string name="retry">Retry</string>
     <string name="favorites_are_empty">Favorites are empty.</string>
     <string name="check_connection">Check Your Connection and Try Again.</string>
+    <string-array name="languages">
+        <item>English</item>
+        <item>German</item>
+        <item>French</item>
+    </string-array>
+
 </resources>

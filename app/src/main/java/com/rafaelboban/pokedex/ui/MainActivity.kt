@@ -1,5 +1,6 @@
 package com.rafaelboban.pokedex.ui
 
+import android.content.Context
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val sp = getPreferences(Context.MODE_PRIVATE)
+        with (sp.edit()) {
+            if (!sp.contains("lang")) {
+                putString("lang", "en");
+                apply()
+            }
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

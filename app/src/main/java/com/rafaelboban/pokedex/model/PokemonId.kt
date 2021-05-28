@@ -2,7 +2,7 @@ package com.rafaelboban.pokedex.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.rafaelboban.pokedex.utils.extractId
+import com.rafaelboban.pokedex.utils.extractPokemonId
 import java.io.Serializable
 
 @Entity(tableName = "favorites")
@@ -15,5 +15,5 @@ data class PokemonId(
 ) : Serializable {
 
     val pokemonId: Int
-        get() = url.extractId()
+        get() = url.extractPokemonId()
 }
