@@ -11,7 +11,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/tint_secondary"
         android:elevation="4dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="1dp"
@@ -28,7 +27,7 @@
 
             <TextView
                 android:id="@+id/separator_description"
-                style="@style/Headline2Surface1Center"
+                style="@style/Headline2DarkCenter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Generation I"

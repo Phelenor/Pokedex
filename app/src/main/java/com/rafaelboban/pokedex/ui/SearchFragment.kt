@@ -53,7 +53,6 @@ class SearchFragment : Fragment() {
 
         viewModel.setupLanguages()
 
-
         setupListeners()
         setupObservers()
         return binding.root

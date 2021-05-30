@@ -23,15 +23,17 @@ interface PokemonDao {
     @Query("DELETE FROM favorites")
     suspend fun clearFavorites()
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPokemon(pokemon: List<Pokemon>)
 
     @Query("SELECT * FROM pokemon")
     suspend fun getPokemon(): List<Pokemon>
 
 
     @Query("SELECT * FROM languages")
-    suspend fun getLanguages(): MutableList<LanguageId>
+    suspend fun getLanguages(): List<LanguageId>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLanguages(languages: MutableList<LanguageId>)
+    suspend fun insertLanguages(languages: List<LanguageId>)
 
 }
