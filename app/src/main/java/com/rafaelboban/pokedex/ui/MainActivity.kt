@@ -2,12 +2,12 @@ package com.rafaelboban.pokedex.ui
 
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,13 +20,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sp = getPreferences(Context.MODE_PRIVATE)
-        with (sp.edit()) {
-            if (!sp.contains("lang")) {
-                putString("lang", "en");
-                apply()
-            }
-        }
+        setupDefaultLanguage()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -39,5 +33,16 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         supportActionBar?.hide()
+    }
+
+    private fun setupDefaultLanguage() {
+        val sp = getSharedPreferences("default", Context.MODE_PRIVATE)
+        with (sp.edit()) {
+            if (!sp.contains("langId")) {
+                putInt("langId", 9)
+                putString("langName", "English")
+                apply()
+            }
+        }
     }
 }

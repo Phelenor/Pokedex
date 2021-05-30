@@ -1,19 +1,22 @@
 package com.rafaelboban.pokedex.database
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.lang.LanguageId
-import com.rafaelboban.pokedex.model.PokemonId
 
 @Dao
 interface PokemonDao {
 
     @Query("SELECT * FROM favorites")
-    suspend fun getFavorites(): List<PokemonId>
+    suspend fun getFavorites(): List<Favorite>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(pokemon: PokemonId)
+    suspend fun insert(pokemon: Favorite)
 
-    @Query("DELETE FROM favorites WHERE name = :name")
+    @Query("DELETE FROM favorites WHERE `pokemon-name` = :name")
     suspend fun delete(name: String)
 
     @Query("DELETE FROM favorites")

@@ -1,7 +1,12 @@
 package com.rafaelboban.pokedex.model
 
+import androidx.room.Embedded
+import androidx.room.Entity
+
+@Entity
 data class Pokemon(
-    var idClass: PokemonId,
-    var infoClass: PokemonInfo? = null
+    @Embedded val idClass: PokemonId,
+    @Embedded val specieClass: PokemonSpecie,
+    @Embedded val infoClass: PokemonInfo
 ) {
 }

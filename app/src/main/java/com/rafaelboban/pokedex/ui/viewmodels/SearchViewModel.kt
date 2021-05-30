@@ -1,15 +1,14 @@
 package com.rafaelboban.pokedex.ui.viewmodels
 
 import androidx.lifecycle.*
-import androidx.paging.cachedIn
+import androidx.paging.*
 import com.rafaelboban.pokedex.api.ApiService
-import com.rafaelboban.pokedex.data.PokemonRepository
+import com.rafaelboban.pokedex.data.PokemonPagingSource
 import com.rafaelboban.pokedex.database.PokemonDao
-import com.rafaelboban.pokedex.model.PokemonId
+import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.lang.LanguageId
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.extractPokemonId
-import com.rafaelboban.pokedex.utils.filterAll
 import com.rafaelboban.pokedex.utils.transformToRange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -17,9 +16,10 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val NETWORK_PAGE_SIZE = 20
+
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repository: PokemonRepository,
     private val pokemonDao: PokemonDao,
     private val apiService: ApiService
 ) : ViewModel() {
@@ -27,9 +27,18 @@ class SearchViewModel @Inject constructor(
     private val currentQuery = MutableLiveData("")
 
     val pokemon = currentQuery.switchMap { query ->
-        repository.getPokemon().map { pagingData ->
-            pagingData.filterAll(generateFilters(query))
-        }.cachedIn(viewModelScope)
+        getPagedData().cachedIn(viewModelScope)
+    }
+
+    private fun getPagedData(): LiveData<PagingData<Pokemon>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = NETWORK_PAGE_SIZE,
+                maxSize = 100,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { PokemonPagingSource(apiService, pokemonDao) }
+        ).liveData
     }
 
     fun searchPokemon(query: String) {
@@ -73,13 +82,13 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun generateFilters(query: String) = listOf<(PokemonId) -> Boolean>(
-        { query.lowercase() in it.name.lowercase() },
-        { query == it.id.toString().padStart(3, '0') },
+    private fun generateFilters(query: String) = listOf<(Pokemon) -> Boolean>(
+        { query.lowercase() in it.idClass.name.lowercase() },
+        { query == it.idClass.id.toString().padStart(3, '0') },
         {
             val range = query.transformToRange()
             if (range != null) {
-                it.url.extractPokemonId() in range
+                it.idClass.url.extractPokemonId() in range
             } else {
                 false
             }

@@ -1,6 +1,5 @@
 package com.rafaelboban.pokedex.ui
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -53,6 +52,7 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.setupLanguages()
+
 
         setupListeners()
         setupObservers()
@@ -118,17 +118,6 @@ class SearchFragment : Fragment() {
     private fun setupObservers() {
         viewModel.pokemon.observe(viewLifecycleOwner) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
-        }
-    }
-
-    private fun setupDefaultLanguage() {
-        val sp = activity?.getPreferences(Context.MODE_PRIVATE)!!
-        with(sp.edit()) {
-            if (!sp.contains("langId")) {
-                putInt("langId", 9)
-                putString("langName", "English")
-                apply()
-            }
         }
     }
 }

@@ -1,18 +1,16 @@
 package com.rafaelboban.pokedex.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.rafaelboban.pokedex.utils.extractPokemonId
-import java.io.Serializable
 
-@Entity(tableName = "favorites")
+@Entity
 data class PokemonId(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int? = null,
-    val name: String,
-    val url: String,
-    var isFavorite: Boolean = false
-) : Serializable {
+    @ColumnInfo(name = "pokemon-name") val name: String,
+    @ColumnInfo(name = "pokemon-url") val url: String,
+    var isFavorite: Boolean = false,
+    var id: Int? = null
+) {
 
     val pokemonId: Int
         get() = url.extractPokemonId()

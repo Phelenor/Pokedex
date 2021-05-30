@@ -5,7 +5,7 @@ import androidx.paging.filter
 import com.rafaelboban.pokedex.model.PokemonId
 
 fun String.extractPokemonId(): Int =
-    this.substringAfter("pokemon").replace("/", "").toInt()
+    this.substringAfter("pokemon-species").replace("/", "").toInt()
 
 fun String.extractLangId(): Int =
     this.substringAfter("language").replace("/", "").toInt()
@@ -22,7 +22,7 @@ fun String.transformToRange(): IntRange? {
         }
         try {
             val start = range[0].toInt()
-            return start..11000
+            return start..898
         } catch (e: Exception) {
         }
     }

@@ -1,7 +1,12 @@
 package com.rafaelboban.pokedex.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+
+@Entity
 data class AbilityInfo(
-    val ability: Ability,
+    @Embedded val ability: Ability,
     val is_hidden: Boolean,
-    val slot: Int
+    @ColumnInfo(name = "type-info-slot") val slot: Int
 )

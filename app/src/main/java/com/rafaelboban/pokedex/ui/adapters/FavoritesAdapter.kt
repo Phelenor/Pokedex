@@ -1,7 +1,7 @@
 package com.rafaelboban.pokedex.ui.adapters
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +11,17 @@ import coil.load
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.databinding.CardPokemonItemBinding
-import com.rafaelboban.pokedex.model.PokemonId
+import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.ui.FavoritesFragment
+import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.getSprite
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 class FavoritesAdapter(
-    var pokemonList: List<PokemonId>,
+    var pokemonList: List<Favorite>,
     private val pokemonDao: PokemonDao,
     private val fragmentReference: FavoritesFragment
 ) : RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder>() {
@@ -42,7 +42,7 @@ class FavoritesAdapter(
         val pokemon = pokemonList[position]
 
         holder.binding.apply {
-            pokemonImage.load(pokemon.getSprite()) {
+            pokemonImage.load(pokemon.pokemon.idClass.getSprite()) {
                 listener(
                     onStart = {
                         imageLoadProgressbar.visibility = View.VISIBLE
@@ -63,7 +63,7 @@ class FavoritesAdapter(
                 )
             }
 
-            if (pokemon.isFavorite) {
+            if (pokemon.pokemon.idClass.isFavorite) {
                 favoriteButton.setImageDrawable(
                     ResourcesCompat.getDrawable(
                         root.resources,
@@ -79,8 +79,20 @@ class FavoritesAdapter(
                 )
             }
 
-            pokemonName.text = pokemon.name.capitalize()
-            pokemonId.text = pokemon.pokemonId.toString().padStart(3, '0')
+            val sp = root.context.getSharedPreferences("default", Context.MODE_PRIVATE)
+            val langId = sp.getInt("langId", 0)
+
+            if (sp.getInt("langId", 0) == 9) {
+                pokemonName.text = pokemon.pokemon.idClass.name.capitalize()
+            } else {
+                for (name in pokemon.pokemon.specieClass.names) {
+                    if (name.language.url.extractLangId() == langId) {
+                        pokemonName.text = name.name.capitalize()
+                        break
+                    }
+                }
+            }
+            pokemonId.text = pokemon.pokemon.idClass.pokemonId.toString().padStart(3, '0')
 
             if (FAVORITES_EDIT_MODE) {
                 reorderIcon.visibility = View.VISIBLE
@@ -89,18 +101,15 @@ class FavoritesAdapter(
             }
 
             favoriteButton.setOnClickListener {
-                if (pokemon.isFavorite) {
-                    pokemon.isFavorite = false
+                if (pokemon.pokemon.idClass.isFavorite) {
+                    pokemon.pokemon.idClass.isFavorite = false
                     pokemon.id = null
 
                     (pokemonList as ArrayList).remove(pokemon)
                     notifyItemRemoved(holder.bindingAdapterPosition)
 
                     CoroutineScope(Dispatchers.IO).launch {
-                        pokemonDao.delete(pokemon.name)
-                        Log.d("FAVS", pokemonDao.getFavorites().map {
-                            it.name to it.id
-                        }.toString())
+                        pokemonDao.delete(pokemon.pokemon.idClass.name)
                     }
 
                     favoriteButton.setImageDrawable(
@@ -110,13 +119,10 @@ class FavoritesAdapter(
                         )
                     )
                 } else {
-                    pokemon.isFavorite = true
+                    pokemon.pokemon.idClass.isFavorite = true
 
                     CoroutineScope(Dispatchers.IO).launch {
-                        pokemonDao.insert(pokemon)
-                        Log.d("FAVS", pokemonDao.getFavorites().map {
-                            it.name to it.id
-                        }.toString())
+                        pokemonDao.insert(Favorite(pokemon = pokemon.pokemon))
                     }
 
                     favoriteButton.setImageDrawable(
@@ -139,7 +145,7 @@ class FavoritesAdapter(
 
     override fun getItemCount() = pokemonList.size
 
-    fun setPokemon(pokemon: List<PokemonId>) {
+    fun setPokemon(pokemon: List<Favorite>) {
         this.pokemonList = pokemon
         notifyDataSetChanged()
     }

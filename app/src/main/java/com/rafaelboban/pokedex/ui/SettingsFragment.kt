@@ -48,7 +48,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun saveLanguagePreferences(id: Int, name: String = "English"): Boolean {
-        val sp = activity?.getPreferences(Context.MODE_PRIVATE)!!
+        val sp = activity?.getSharedPreferences("default", Context.MODE_PRIVATE)!!
         if (sp.getInt("langId", 0) == id) {
             return false
         } else {
@@ -74,7 +74,7 @@ class SettingsFragment : Fragment() {
 
     private fun setupSpinner() {
         val currentLanguage =
-            activity?.getPreferences(Context.MODE_PRIVATE)!!.getString("langName", "")
+            activity?.getSharedPreferences("default", Context.MODE_PRIVATE)!!.getString("langName", "")
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, languages)
         binding.languageMenu.setAdapter(arrayAdapter)
         binding.languageMenu.setText(currentLanguage, false)
@@ -129,11 +129,11 @@ class SettingsFragment : Fragment() {
         dialog.window!!.setBackgroundDrawable(InsetDrawable(ColorDrawable(Color.TRANSPARENT), 16))
 
         val sb = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
-        sb.view.setBackgroundColor(Color.TRANSPARENT);
+        sb.view.setBackgroundColor(Color.TRANSPARENT)
         val sbLayout = sb.view as Snackbar.SnackbarLayout
         val sbBinding = LayoutSnackbarBinding.inflate(layoutInflater)
         sbLayout.addView(sbBinding.root, 0)
-        sbBinding.message.text = getString(com.rafaelboban.pokedex.R.string.favorites_is_clear)
+        sbBinding.message.text = getString(R.string.favorites_is_clear)
 
         sbBinding.snackbarClose.setOnClickListener {
             sb.dismiss()

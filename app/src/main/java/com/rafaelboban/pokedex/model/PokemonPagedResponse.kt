@@ -1,6 +1,6 @@
 package com.rafaelboban.pokedex.model
 
-data class PokemonResponse(
+data class PokemonPagedResponse(
     val count: Int,
     val next: String,
     val previous: String,

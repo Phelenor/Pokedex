@@ -1,11 +1,17 @@
 package com.rafaelboban.pokedex.data
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.rafaelboban.pokedex.api.ApiService
 import com.rafaelboban.pokedex.database.PokemonDao
-import com.rafaelboban.pokedex.model.PokemonId
+import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.PokemonInfo
+import com.rafaelboban.pokedex.model.PokemonSpecie
+import com.rafaelboban.pokedex.ui.viewmodels.NETWORK_PAGE_SIZE
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -14,39 +20,59 @@ private const val POKEMON_STARTING_PAGE_INDEX = 0
 class PokemonPagingSource(
     private val apiService: ApiService,
     private val pokemonDao: PokemonDao
-) : PagingSource<Int, PokemonId>() {
+) : PagingSource<Int, Pokemon>() {
 
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonId> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
         val position = params.key ?: POKEMON_STARTING_PAGE_INDEX
 
         return try {
             val responsePaged = apiService.getPokemon(params.loadSize, position * params.loadSize)
             val favorites = pokemonDao.getFavorites()
+
             val pokemonPaged = responsePaged.results
 
-            for (pokemon in pokemonPaged) {
+            val specieInfo: List<PokemonSpecie>
+            val pokemonInfo: List<PokemonInfo>
+            coroutineScope {
+
+                val fetchSpecieInfo = pokemonPaged.map { pokemonId ->
+                    async(Dispatchers.IO) {
+                        apiService.getPokemonSpecieInfo(pokemonId.pokemonId)
+                    }
+                }
+
+                val fetchPokemonInfo = pokemonPaged.map { pokemonId ->
+                    async(Dispatchers.IO) {
+                        apiService.getPokemonInfo(pokemonId.pokemonId)
+                    }
+                }
+
+                specieInfo = fetchSpecieInfo.awaitAll()
+                pokemonInfo = fetchPokemonInfo.awaitAll()
+            }
+
+            val pokemon = mutableListOf<Pokemon>()
+
+            for (i in pokemonPaged.indices) {
                 for (favorite in favorites) {
-                    if (pokemon.pokemonId == favorite.pokemonId) {
-                        pokemon.isFavorite = true
-                        pokemon.id = favorite.id
+                    if (pokemonPaged[i].pokemonId == favorite.pokemon.idClass.pokemonId) {
+                        pokemonPaged[i].isFavorite = true
+                        pokemonPaged[i].id = favorite.id
                         break
                     }
                 }
+                pokemon.add(Pokemon(pokemonPaged[i], specieInfo[i], pokemonInfo[i]))
             }
 
-            val nextKey = if (pokemonPaged.isEmpty()) {
+            val nextKey = if (pokemon.isEmpty()) {
                 null
             } else {
                 position + (params.loadSize / NETWORK_PAGE_SIZE)
             }
 
-            for (i in pokemonPaged.indices) {
-                if (pokemonPaged[i] in favorites) pokemonPaged[i].isFavorite = true
-            }
-
             LoadResult.Page(
-                data = pokemonPaged,
+                data = pokemon,
                 prevKey = if (position == POKEMON_STARTING_PAGE_INDEX) null else position - 1,
                 nextKey = nextKey
             )
@@ -58,7 +84,7 @@ class PokemonPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, PokemonId>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, Pokemon>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
