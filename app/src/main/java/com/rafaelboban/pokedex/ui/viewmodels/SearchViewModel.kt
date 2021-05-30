@@ -8,8 +8,7 @@ import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.lang.LanguageId
 import com.rafaelboban.pokedex.utils.extractLangId
-import com.rafaelboban.pokedex.utils.extractPokemonId
-import com.rafaelboban.pokedex.utils.transformToRange
+import com.rafaelboban.pokedex.utils.filterAll
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -25,19 +24,34 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val currentQuery = MutableLiveData("")
+    private val rangeRegex = "^[0-9]+(-([0-9])+)*\$".toRegex()
 
-    val pokemon = currentQuery.switchMap { query ->
-        getPagedData().cachedIn(viewModelScope)
+    val pokemon = currentQuery.switchMap {
+        var start = 0
+        var end = 900
+        var query = it.trim()
+
+        if (query.isNotBlank() && query[query.lastIndex] == '-') query = query.substring(0 until query.lastIndex)
+
+        if (rangeRegex.matches(query)) {
+            val range = query.split('-')
+            start = range[0].toInt() - 1
+            if (range.size > 1) end = range[1].toInt()
+        }
+
+        getPagedData(start, end).map { pagingData ->
+            pagingData.filterAll(generateFilters(query.lowercase()))
+        }.cachedIn(viewModelScope)
     }
 
-    private fun getPagedData(): LiveData<PagingData<Pokemon>> {
+    private fun getPagedData(start: Int = 0, end: Int = 900): LiveData<PagingData<Pokemon>> {
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
                 maxSize = 100,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { PokemonPagingSource(apiService, pokemonDao) }
+            pagingSourceFactory = { PokemonPagingSource(apiService, pokemonDao, start, end) }
         ).liveData
     }
 
@@ -83,15 +97,34 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun generateFilters(query: String) = listOf<(Pokemon) -> Boolean>(
-        { query.lowercase() in it.idClass.name.lowercase() },
-        { query == it.idClass.id.toString().padStart(3, '0') },
+        { query.isBlank() },
         {
-            val range = query.transformToRange()
-            if (range != null) {
-                it.idClass.url.extractPokemonId() in range
+            query in it.specieClass.names.map { translation ->
+                translation.name.lowercase()
+            }
+        },
+        { query in it.idClass.name },
+        { query == it.idClass.pokemonId.toString().padStart(3, '0') },
+
+        {
+            query in it.infoClass.types.map { typeInfo ->
+            typeInfo.type.name
+          }
+        },
+
+        {
+            var start = 0
+            var end = 900
+            if (rangeRegex.matches(query)) {
+                val range = query.split('-')
+                start = range[0].toInt()
+                if (range.size > 1) end = range[1].toInt()
+
+                it.idClass.pokemonId in start..end
             } else {
                 false
             }
         }
+
     )
 }

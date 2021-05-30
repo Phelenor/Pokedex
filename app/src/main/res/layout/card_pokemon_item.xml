@@ -37,7 +37,6 @@
                 android:layout_marginStart="104dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:text="Pikachuuu"
                 app:layout_constraintEnd_toStartOf="@+id/favorite_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -48,7 +47,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="999"
                 app:layout_constraintEnd_toEndOf="@+id/pokemon_name"
                 app:layout_constraintStart_toStartOf="@+id/pokemon_name"
                 app:layout_constraintTop_toBottomOf="@+id/pokemon_name" />

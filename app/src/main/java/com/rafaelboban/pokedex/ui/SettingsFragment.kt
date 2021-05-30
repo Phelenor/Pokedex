@@ -6,9 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Process
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,10 +87,8 @@ class SettingsFragment : Fragment() {
                             )
                         ) {
                             binding.languageMenu.setText(language.nameEnglish, false)
-                            restartApp()
                         } else if (language.nameNative == selectedLanguage) {
                             binding.languageMenu.setText(language.nameNative, false)
-                            restartApp()
                         }
                     }
                 }
@@ -108,16 +103,6 @@ class SettingsFragment : Fragment() {
             }.sorted()
             setupSpinner()
         }
-    }
-
-    private fun restartApp() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(activity, MainActivity::class.java)
-            val cn = intent.component
-            val mainIntent = Intent.makeRestartActivityTask(cn)
-            startActivity(mainIntent)
-            Process.killProcess(Process.myPid())
-        }, 300)
     }
 
     private fun showDialog() {

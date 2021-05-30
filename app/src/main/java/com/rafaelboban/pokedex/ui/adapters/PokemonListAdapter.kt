@@ -80,8 +80,7 @@ class PokemonListAdapter(val pokemonDao: PokemonDao) :
                 }
                 val sp = root.context.getSharedPreferences("default", Context.MODE_PRIVATE)
                 val langId = sp.getInt("langId", 0)
-
-                if (sp.getInt("langId", 0) == 9) {
+                if (langId == 9) {
                     pokemonName.text = pokemonBase.name.capitalize()
                 } else {
                     for (name in pokemon.specieClass.names) {
@@ -89,6 +88,9 @@ class PokemonListAdapter(val pokemonDao: PokemonDao) :
                             pokemonName.text = name.name.capitalize()
                             break
                         }
+                    }
+                    if (pokemonName.text.isEmpty()) {
+                        pokemonName.text = pokemonBase.name.capitalize()
                     }
                 }
 

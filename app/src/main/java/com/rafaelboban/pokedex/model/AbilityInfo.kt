@@ -8,5 +8,5 @@ import androidx.room.Entity
 data class AbilityInfo(
     @Embedded val ability: Ability,
     val is_hidden: Boolean,
-    @ColumnInfo(name = "type-info-slot") val slot: Int
+    @ColumnInfo(name = "ability-info-slot") val slot: Int
 )
