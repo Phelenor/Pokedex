@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.rafaelboban.pokedex.model.Favorite
+import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.lang.LanguageId
 
 @Dao
@@ -14,13 +15,18 @@ interface PokemonDao {
     suspend fun getFavorites(): List<Favorite>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(pokemon: Favorite)
+    suspend fun insertFavorite(pokemon: Favorite)
 
     @Query("DELETE FROM favorites WHERE `pokemon-name` = :name")
-    suspend fun delete(name: String)
+    suspend fun deleteFavorite(name: String)
 
     @Query("DELETE FROM favorites")
-    suspend fun clear()
+    suspend fun clearFavorites()
+
+
+    @Query("SELECT * FROM pokemon")
+    suspend fun getPokemon(): List<Pokemon>
+
 
     @Query("SELECT * FROM languages")
     suspend fun getLanguages(): MutableList<LanguageId>

@@ -10,27 +10,24 @@ fun String.extractPokemonId(): Int =
 fun String.extractLangId(): Int =
     this.substringAfter("language").replace("/", "").toInt()
 
-
-fun String.transformToRange(): IntRange? {
-    val range = this.split("-")
-    if (range.size == 2) {
-        try {
-            val start = range[0].toInt()
-            val end = range[1].toInt()
-            return start..end
-        } catch (e: Exception) {
-        }
-        try {
-            val start = range[0].toInt()
-            return start..898
-        } catch (e: Exception) {
-        }
-    }
-    return null
-}
+fun String.extractGeneration(): Int =
+    this.substringAfter("generation").replace("/", "").toInt()
 
 fun PokemonId.getSprite() =
     "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.pokemonId}.png"
+
+fun Int.toRoman() =
+    when (this) {
+        1 -> 'I'
+        2 -> "II"
+        3 -> "III"
+        4 -> "IV"
+        5 -> "V"
+        6 -> "VI"
+        7 -> "VII"
+        8 -> "VIII"
+        else -> "X"
+    }
 
 fun <T : Any> PagingData<T>.filterAll(filters: List<(T) -> Boolean>) =
     filter { item -> filters.any { filter -> filter(item) } }

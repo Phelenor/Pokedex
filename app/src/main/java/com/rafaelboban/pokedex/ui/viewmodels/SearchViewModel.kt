@@ -6,7 +6,9 @@ import com.rafaelboban.pokedex.api.ApiService
 import com.rafaelboban.pokedex.data.PokemonPagingSource
 import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.UiModel
 import com.rafaelboban.pokedex.model.lang.LanguageId
+import com.rafaelboban.pokedex.utils.extractGeneration
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.filterAll
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,12 +28,13 @@ class SearchViewModel @Inject constructor(
     private val currentQuery = MutableLiveData("")
     private val rangeRegex = "^[0-9]+(-([0-9])+)*\$".toRegex()
 
-    val pokemon = currentQuery.switchMap {
+    val pokemon = currentQuery.switchMap { newQuery ->
         var start = 0
         var end = 900
-        var query = it.trim()
+        var query = newQuery.trim()
 
-        if (query.isNotBlank() && query[query.lastIndex] == '-') query = query.substring(0 until query.lastIndex)
+        if (query.isNotBlank() && query[query.lastIndex] == '-') query =
+            query.substring(0 until query.lastIndex)
 
         if (rangeRegex.matches(query)) {
             val range = query.split('-')
@@ -39,9 +42,26 @@ class SearchViewModel @Inject constructor(
             if (range.size > 1) end = range[1].toInt()
         }
 
-        getPagedData(start, end).map { pagingData ->
-            pagingData.filterAll(generateFilters(query.lowercase()))
-        }.cachedIn(viewModelScope)
+        getPagedData(start, end)
+            .map { pagingData -> pagingData.filterAll(generateFilters(query.lowercase())) }
+            .map { pagingData -> pagingData.map { UiModel.PokemonItem(it) } }
+            .map { pagingData ->
+                pagingData.insertSeparators { before, after ->
+                    if (after == null) {
+                        return@insertSeparators null
+                    }
+
+                    if (before == null) {
+                        return@insertSeparators UiModel.SeparatorItem(after.generation.toString())
+                    }
+
+                    if (before.generation < after.generation) {
+                            UiModel.SeparatorItem(after.generation.toString())
+                    } else {
+                        null
+                    }
+                }
+            }.cachedIn(viewModelScope)
     }
 
     private fun getPagedData(start: Int = 0, end: Int = 900): LiveData<PagingData<Pokemon>> {
@@ -128,3 +148,6 @@ class SearchViewModel @Inject constructor(
 
     )
 }
+
+private val UiModel.PokemonItem.generation: Int
+    get() = this.pokemon.specieClass.generation.url.extractGeneration()

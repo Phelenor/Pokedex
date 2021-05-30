@@ -68,7 +68,7 @@ class PokemonPagingSource(
                 for (favorite in favorites) {
                     if (pokemonPaged[i].pokemonId == favorite.pokemon.idClass.pokemonId) {
                         pokemonPaged[i].isFavorite = true
-                        pokemonPaged[i].id = favorite.id
+                        pokemonPaged[i].id = favorite.id!!
                         break
                     }
                 }

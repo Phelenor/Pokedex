@@ -27,10 +27,10 @@ class FavoritesViewModel @Inject constructor(val pokemonDao: PokemonDao) : ViewM
 
     fun updateFavorites(pokemonList: List<Favorite>) {
         viewModelScope.launch {
-            pokemonDao.clear()
+            pokemonDao.clearFavorites()
             for (i in pokemonList.indices) {
                 pokemonList[i].id = i + 1
-                pokemonDao.insert(pokemonList[i])
+                pokemonDao.insertFavorite(pokemonList[i])
             }
         }
     }

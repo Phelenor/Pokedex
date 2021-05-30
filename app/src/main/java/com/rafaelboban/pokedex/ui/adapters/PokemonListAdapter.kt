@@ -12,29 +12,58 @@ import coil.load
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.databinding.CardPokemonItemBinding
+import com.rafaelboban.pokedex.databinding.CardSeparatorItemBinding
 import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.UiModel
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.getSprite
+import com.rafaelboban.pokedex.utils.toRoman
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class PokemonListAdapter(val pokemonDao: PokemonDao) :
-    PagingDataAdapter<Pokemon, PokemonListAdapter.PokemonViewHolder>(POKEMON_COMPARATOR) {
+    PagingDataAdapter<UiModel, RecyclerView.ViewHolder>(POKEMON_COMPARATOR) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
-        val binding =
-            CardPokemonItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PokemonViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
-        val current = getItem(position)
-        if (current != null) {
-            holder.bind(current)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == R.layout.card_separator_item) {
+            SeparatorViewHolder(
+                CardSeparatorItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+        } else {
+            PokemonViewHolder(
+                CardPokemonItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
         }
     }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is UiModel.PokemonItem -> R.layout.card_pokemon_item
+            is UiModel.SeparatorItem -> R.layout.card_separator_item
+            null -> throw UnsupportedOperationException("Unknown view")
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val uiModel = getItem(position)
+        uiModel.let {
+            when (uiModel) {
+                is UiModel.PokemonItem -> (holder as PokemonViewHolder).bind(uiModel.pokemon)
+                is UiModel.SeparatorItem -> (holder as SeparatorViewHolder).bind(uiModel.description)
+            }
+        }
+    }
+
 
     inner class PokemonViewHolder(private val binding: CardPokemonItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -99,10 +128,10 @@ class PokemonListAdapter(val pokemonDao: PokemonDao) :
                 favoriteButton.setOnClickListener {
                     if (pokemonBase.isFavorite) {
                         pokemonBase.isFavorite = false
-                        pokemonBase.id = null
+                        pokemonBase.id = 0
 
                         CoroutineScope(Dispatchers.IO).launch {
-                            pokemonDao.delete(pokemonBase.name)
+                            pokemonDao.deleteFavorite(pokemonBase.name)
                         }
 
                         binding.favoriteButton.setImageDrawable(
@@ -114,7 +143,7 @@ class PokemonListAdapter(val pokemonDao: PokemonDao) :
                     } else {
                         pokemonBase.isFavorite = true
                         CoroutineScope(Dispatchers.IO).launch {
-                            pokemonDao.insert(Favorite(pokemon = pokemon))
+                            pokemonDao.insertFavorite(Favorite(pokemon = pokemon))
                         }
 
                         binding.favoriteButton.setImageDrawable(
@@ -129,12 +158,27 @@ class PokemonListAdapter(val pokemonDao: PokemonDao) :
         }
     }
 
-    companion object {
-        private val POKEMON_COMPARATOR = object : DiffUtil.ItemCallback<Pokemon>() {
-            override fun areItemsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean =
-                oldItem.idClass.name == newItem.idClass.name
 
-            override fun areContentsTheSame(oldItem: Pokemon, newItem: Pokemon): Boolean =
+    inner class SeparatorViewHolder(private val binding: CardSeparatorItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(desc: String) {
+            binding.separatorDescription.text =
+                binding.root.context.getString(R.string.generation_separator_text, desc.toInt().toRoman())
+        }
+    }
+
+
+    companion object {
+        private val POKEMON_COMPARATOR = object : DiffUtil.ItemCallback<UiModel>() {
+            override fun areItemsTheSame(oldItem: UiModel, newItem: UiModel): Boolean =
+                (oldItem is UiModel.PokemonItem && newItem is UiModel.PokemonItem &&
+                        oldItem.pokemon.idClass.name == newItem.pokemon.idClass.name) ||
+                        (oldItem is UiModel.SeparatorItem && newItem is UiModel.SeparatorItem &&
+                                oldItem.description == newItem.description)
+
+
+            override fun areContentsTheSame(oldItem: UiModel, newItem: UiModel): Boolean =
                 oldItem == newItem
         }
     }

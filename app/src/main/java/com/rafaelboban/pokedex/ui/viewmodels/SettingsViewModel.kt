@@ -21,7 +21,7 @@ class SettingsViewModel @Inject constructor(private val pokemonDao: PokemonDao) 
 
     fun clearFavorites() {
         viewModelScope.launch {
-            pokemonDao.clear()
+            pokemonDao.clearFavorites()
         }
     }
 

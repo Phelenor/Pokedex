@@ -109,7 +109,7 @@ class FavoritesAdapter(
                     notifyItemRemoved(holder.bindingAdapterPosition)
 
                     CoroutineScope(Dispatchers.IO).launch {
-                        pokemonDao.delete(pokemon.pokemon.idClass.name)
+                        pokemonDao.deleteFavorite(pokemon.pokemon.idClass.name)
                     }
 
                     favoriteButton.setImageDrawable(
@@ -122,7 +122,7 @@ class FavoritesAdapter(
                     pokemon.pokemon.idClass.isFavorite = true
 
                     CoroutineScope(Dispatchers.IO).launch {
-                        pokemonDao.insert(Favorite(pokemon = pokemon.pokemon))
+                        pokemonDao.insertFavorite(Favorite(pokemon = pokemon.pokemon))
                     }
 
                     favoriteButton.setImageDrawable(
