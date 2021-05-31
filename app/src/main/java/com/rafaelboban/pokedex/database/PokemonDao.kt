@@ -1,5 +1,6 @@
 package com.rafaelboban.pokedex.database
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -23,11 +24,11 @@ interface PokemonDao {
     @Query("DELETE FROM favorites")
     suspend fun clearFavorites()
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPokemon(pokemon: List<Pokemon>)
 
     @Query("SELECT * FROM pokemon")
-    suspend fun getPokemon(): List<Pokemon>
+    fun getPokemon(): PagingSource<Int, Pokemon>
 
 
     @Query("SELECT * FROM languages")

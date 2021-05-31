@@ -128,7 +128,6 @@ class PokemonListAdapter(val pokemonDao: PokemonDao) :
                 favoriteButton.setOnClickListener {
                     if (pokemonBase.isFavorite) {
                         pokemonBase.isFavorite = false
-                        pokemonBase.id = 0
 
                         CoroutineScope(Dispatchers.IO).launch {
                             pokemonDao.deleteFavorite(pokemonBase.name)

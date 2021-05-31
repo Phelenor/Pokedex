@@ -34,7 +34,8 @@ class PokemonPagingSource(
             if (end - start < 60) end += 60 - (end - start)
 
             if (position * params.loadSize + start + params.loadSize <= end) {
-                responsePaged = apiService.getPokemon(params.loadSize, position * params.loadSize + start)
+                responsePaged =
+                    apiService.getPokemon(params.loadSize, position * params.loadSize + start)
                 pokemonPaged = responsePaged.results
             } else {
                 pokemonPaged = listOf()
@@ -68,11 +69,17 @@ class PokemonPagingSource(
                 for (favorite in favorites) {
                     if (pokemonPaged[i].pokemonId == favorite.pokemon.idClass.pokemonId) {
                         pokemonPaged[i].isFavorite = true
-                        pokemonPaged[i].id = favorite.id!!
                         break
                     }
                 }
-                pokemon.add(Pokemon(pokemonPaged[i], specieInfo[i], pokemonInfo[i]))
+                pokemon.add(
+                    Pokemon(
+                        pokemonPaged[i].pokemonId,
+                        pokemonPaged[i],
+                        specieInfo[i],
+                        pokemonInfo[i]
+                    )
+                )
             }
 
             val nextKey = if (pokemon.isEmpty()) {

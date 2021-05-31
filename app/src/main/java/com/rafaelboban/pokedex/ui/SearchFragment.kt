@@ -79,10 +79,15 @@ class SearchFragment : Fragment() {
 
         adapter.addLoadStateListener { loadState ->
             binding.apply {
-                progressBarSearch.isVisible = loadState.source.refresh is LoadState.Loading
-                recyclerViewMain.isVisible = loadState.source.refresh is LoadState.NotLoading
-                errorStateSearch.root.isVisible = loadState.source.refresh is LoadState.Error
-                if (loadState.source.refresh is LoadState.Error) {
+
+                // val refreshState = loadState.mediator?.refresh ?
+                val refreshState = loadState.source.refresh
+
+                progressBarSearch.isVisible = refreshState is LoadState.Loading
+                recyclerViewMain.isVisible = refreshState is LoadState.NotLoading
+                errorStateSearch.root.isVisible = refreshState is LoadState.Error
+
+                if (refreshState is LoadState.Error) {
                     val sb = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
                     sb.view.setBackgroundColor(Color.TRANSPARENT);
                     val sbLayout = sb.view as Snackbar.SnackbarLayout

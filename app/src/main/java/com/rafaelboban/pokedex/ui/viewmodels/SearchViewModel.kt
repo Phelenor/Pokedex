@@ -3,7 +3,8 @@ package com.rafaelboban.pokedex.ui.viewmodels
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.rafaelboban.pokedex.api.ApiService
-import com.rafaelboban.pokedex.data.PokemonPagingSource
+import com.rafaelboban.pokedex.data.PokemonRemoteMediator
+import com.rafaelboban.pokedex.data.RemoteKeysDao
 import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.UiModel
@@ -22,27 +23,16 @@ const val NETWORK_PAGE_SIZE = 20
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val pokemonDao: PokemonDao,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val remoteKeysDao: RemoteKeysDao
 ) : ViewModel() {
 
     private val currentQuery = MutableLiveData("")
     private val rangeRegex = "^[0-9]+(-([0-9])+)*\$".toRegex()
 
-    val pokemon = currentQuery.switchMap { newQuery ->
-        var start = 0
-        var end = 900
-        var query = newQuery.trim()
+    val pokemon = currentQuery.switchMap { query ->
 
-        if (query.isNotBlank() && query[query.lastIndex] == '-') query =
-            query.substring(0 until query.lastIndex)
-
-        if (rangeRegex.matches(query)) {
-            val range = query.split('-')
-            start = range[0].toInt() - 1
-            if (range.size > 1) end = range[1].toInt()
-        }
-
-        getPagedData(start, end)
+        getPagedData()
             .map { pagingData -> pagingData.filterAll(generateFilters(query.lowercase())) }
             .map { pagingData -> pagingData.map { UiModel.PokemonItem(it) } }
             .map { pagingData ->
@@ -56,7 +46,7 @@ class SearchViewModel @Inject constructor(
                     }
 
                     if (before.generation < after.generation) {
-                            UiModel.SeparatorItem(after.generation.toString())
+                        UiModel.SeparatorItem(after.generation.toString())
                     } else {
                         null
                     }
@@ -64,20 +54,63 @@ class SearchViewModel @Inject constructor(
             }.cachedIn(viewModelScope)
     }
 
-    private fun getPagedData(start: Int = 0, end: Int = 900): LiveData<PagingData<Pokemon>> {
+    private fun getPagedData(): LiveData<PagingData<Pokemon>> {
+
+        @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
                 pageSize = NETWORK_PAGE_SIZE,
-                maxSize = 100,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { PokemonPagingSource(apiService, pokemonDao, start, end) }
+            remoteMediator = PokemonRemoteMediator(
+                apiService,
+                pokemonDao,
+                remoteKeysDao
+            ),
+            pagingSourceFactory = { pokemonDao.getPokemon() }
         ).liveData
     }
 
     fun searchPokemon(query: String) {
         currentQuery.value = query
     }
+
+    private fun generateFilters(query: String) = listOf<(Pokemon) -> Boolean>(
+        { query.isBlank() },
+        {
+            val names = it.specieClass.names.map { translation ->
+                translation.name.lowercase()
+            }
+
+            for (name in names) {
+                if (name.startsWith(query)) return@listOf true
+            }
+            false
+        },
+
+        { it.idClass.name.startsWith(query) },
+        { query == it.idClass.pokemonId.toString().padStart(3, '0') },
+        {
+            query in it.infoClass.types.map { typeInfo ->
+                typeInfo.type.name
+            }
+        },
+        {
+            var currentQuery = query
+            var end = 898
+            if (query.isNotBlank() && query[query.lastIndex] == '-') currentQuery =
+                query.substring(0 until query.lastIndex)
+            if (rangeRegex.matches(currentQuery)) {
+                val range = currentQuery.split('-')
+                val start = range[0].toInt()
+                if (range.size > 1) end = range[1].toInt()
+
+                it.idClass.pokemonId in start..end
+            } else {
+                false
+            }
+        }
+    )
 
     fun setupLanguages() {
         viewModelScope.launch {
@@ -115,38 +148,6 @@ class SearchViewModel @Inject constructor(
             }
         }
     }
-
-    private fun generateFilters(query: String) = listOf<(Pokemon) -> Boolean>(
-        { query.isBlank() },
-        {
-            query in it.specieClass.names.map { translation ->
-                translation.name.lowercase()
-            }
-        },
-        { query in it.idClass.name },
-        { query == it.idClass.pokemonId.toString().padStart(3, '0') },
-
-        {
-            query in it.infoClass.types.map { typeInfo ->
-            typeInfo.type.name
-          }
-        },
-
-        {
-            var start = 0
-            var end = 900
-            if (rangeRegex.matches(query)) {
-                val range = query.split('-')
-                start = range[0].toInt()
-                if (range.size > 1) end = range[1].toInt()
-
-                it.idClass.pokemonId in start..end
-            } else {
-                false
-            }
-        }
-
-    )
 }
 
 private val UiModel.PokemonItem.generation: Int

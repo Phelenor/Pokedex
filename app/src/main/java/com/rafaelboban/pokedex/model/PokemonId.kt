@@ -9,7 +9,6 @@ data class PokemonId(
     @ColumnInfo(name = "pokemon-name") val name: String,
     @ColumnInfo(name = "pokemon-url") val url: String,
     var isFavorite: Boolean = false,
-    var id: Int = 0
 ) {
 
     val pokemonId: Int
