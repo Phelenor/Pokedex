@@ -23,15 +23,16 @@
         android:clickable="true"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:backgroundTint="@color/white"
+        android:foreground="?attr/selectableItemBackground"
         android:text="@string/retry"
         android:textAllCaps="true"
-        android:textColor="@color/tint_secondary"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/error"
         app:cornerRadius="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@color/tint_secondary"
+        app:strokeColor="@color/error"
         app:strokeWidth="1.5dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

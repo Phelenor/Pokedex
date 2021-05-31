@@ -10,20 +10,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.rafaelboban.pokedex.R
-import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.databinding.CardPokemonItemBinding
 import com.rafaelboban.pokedex.databinding.CardSeparatorItemBinding
-import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.UiModel
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.getSprite
 import com.rafaelboban.pokedex.utils.toRoman
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-class PokemonListAdapter(val pokemonDao: PokemonDao) :
+
+class PokemonListAdapter(
+    private val onPokemonClick: (Pokemon) -> Unit,
+    private val onFavoriteClick: (Pokemon) -> Unit
+) :
     PagingDataAdapter<UiModel, RecyclerView.ViewHolder>(POKEMON_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -127,11 +126,7 @@ class PokemonListAdapter(val pokemonDao: PokemonDao) :
 
                 favoriteButton.setOnClickListener {
                     if (pokemonBase.isFavorite) {
-                        pokemonBase.isFavorite = false
-
-                        CoroutineScope(Dispatchers.IO).launch {
-                            pokemonDao.deleteFavorite(pokemonBase.name)
-                        }
+                        onFavoriteClick(pokemon)
 
                         binding.favoriteButton.setImageDrawable(
                             ResourcesCompat.getDrawable(
@@ -140,10 +135,7 @@ class PokemonListAdapter(val pokemonDao: PokemonDao) :
                             )
                         )
                     } else {
-                        pokemonBase.isFavorite = true
-                        CoroutineScope(Dispatchers.IO).launch {
-                            pokemonDao.insertFavorite(Favorite(pokemon = pokemon))
-                        }
+                        onFavoriteClick(pokemon)
 
                         binding.favoriteButton.setImageDrawable(
                             ResourcesCompat.getDrawable(
@@ -163,7 +155,10 @@ class PokemonListAdapter(val pokemonDao: PokemonDao) :
 
         fun bind(desc: String) {
             binding.separatorDescription.text =
-                binding.root.context.getString(R.string.generation_separator_text, desc.toInt().toRoman())
+                binding.root.context.getString(
+                    R.string.generation_separator_text,
+                    desc.toInt().toRoman()
+                )
         }
     }
 

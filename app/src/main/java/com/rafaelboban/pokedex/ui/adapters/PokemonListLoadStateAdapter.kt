@@ -34,16 +34,20 @@ class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
 
         init {
             binding.buttonRetry.setOnClickListener {
-                retry.invoke()
+                retry()
             }
         }
 
         fun bind(loadState: LoadState) {
             binding.apply {
+
                 loadProgressbar.isVisible = loadState is LoadState.Loading
                 buttonRetry.isVisible = loadState !is LoadState.Loading
 
                 if (loadState !is LoadState.Loading) {
+
+                    binding.loadCard.strokeColor = parent!!.resources.getColor(R.color.error)
+
                     val sb = Snackbar.make(parent!!, "", Snackbar.LENGTH_LONG)
                     sb.view.setBackgroundColor(Color.TRANSPARENT);
                     val sbLayout = sb.view as Snackbar.SnackbarLayout
@@ -56,6 +60,8 @@ class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
                         sb.dismiss()
                     }
                     sb.show()
+                } else {
+                    binding.loadCard.strokeColor = parent!!.resources.getColor(R.color.tint_secondary)
                 }
 
             }

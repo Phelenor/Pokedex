@@ -1,11 +1,14 @@
 package com.rafaelboban.pokedex.ui.viewmodels
 
+import android.content.SharedPreferences
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.rafaelboban.pokedex.api.ApiService
 import com.rafaelboban.pokedex.data.PokemonRemoteMediator
 import com.rafaelboban.pokedex.data.RemoteKeysDao
 import com.rafaelboban.pokedex.database.PokemonDao
+import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.UiModel
 import com.rafaelboban.pokedex.model.lang.LanguageId
@@ -13,6 +16,7 @@ import com.rafaelboban.pokedex.utils.extractGeneration
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.filterAll
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -24,11 +28,19 @@ const val NETWORK_PAGE_SIZE = 20
 class SearchViewModel @Inject constructor(
     private val pokemonDao: PokemonDao,
     private val apiService: ApiService,
-    private val remoteKeysDao: RemoteKeysDao
+    private val remoteKeysDao: RemoteKeysDao,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val currentQuery = MutableLiveData("")
     private val rangeRegex = "^[0-9]+(-([0-9])+)*\$".toRegex()
+
+    val handler: CoroutineExceptionHandler by lazy {
+        CoroutineExceptionHandler { _, exception ->
+            Log.e("EXCEPTION", "$exception")
+        }
+    }
+
 
     val pokemon = currentQuery.switchMap { query ->
 
@@ -55,7 +67,6 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun getPagedData(): LiveData<PagingData<Pokemon>> {
-
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
@@ -65,7 +76,8 @@ class SearchViewModel @Inject constructor(
             remoteMediator = PokemonRemoteMediator(
                 apiService,
                 pokemonDao,
-                remoteKeysDao
+                remoteKeysDao,
+                sharedPreferences
             ),
             pagingSourceFactory = { pokemonDao.getPokemon() }
         ).liveData
@@ -112,8 +124,22 @@ class SearchViewModel @Inject constructor(
         }
     )
 
-    fun setupLanguages() {
+    fun onFavoriteClick(pokemon: Pokemon) {
         viewModelScope.launch {
+            if (pokemon.idClass.isFavorite) {
+                pokemon.idClass.isFavorite = false
+                pokemonDao.deleteFavorite(pokemon.idClass.name)
+
+            } else {
+                pokemon.idClass.isFavorite = true
+                pokemonDao.insertFavorite(Favorite(pokemon = pokemon))
+            }
+            pokemonDao.updatePokemon(pokemon.id, (if (pokemon.idClass.isFavorite) 1 else 0))
+        }
+    }
+
+    fun setupLanguages() {
+        viewModelScope.launch(handler) {
             var languages = pokemonDao.getLanguages()
             if (languages.isEmpty()) {
                 languages = apiService.getLanguages().results as MutableList<LanguageId>

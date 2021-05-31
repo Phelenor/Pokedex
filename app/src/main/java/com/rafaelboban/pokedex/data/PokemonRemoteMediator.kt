@@ -1,5 +1,6 @@
 package com.rafaelboban.pokedex.data
 
+import android.content.SharedPreferences
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -25,9 +26,17 @@ class PokemonRemoteMediator(
     private val apiService: ApiService,
     private val pokemonDao: PokemonDao,
     private val remoteKeysDao: RemoteKeysDao,
+    private val sharedPreferences: SharedPreferences
 ) : RemoteMediator<Int, Pokemon>() {
 
-    override suspend fun initialize(): InitializeAction = InitializeAction.SKIP_INITIAL_REFRESH
+    override suspend fun initialize(): InitializeAction {
+
+        return if (!sharedPreferences.contains("initialized")) {
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        } else {
+            InitializeAction.SKIP_INITIAL_REFRESH
+        }
+    }
 
     override suspend fun load(
         loadType: LoadType,
@@ -51,6 +60,15 @@ class PokemonRemoteMediator(
                 val responsePaged: PokemonPagedResponse =
                     apiService.getPokemon(state.config.pageSize, page * state.config.pageSize)
                 responsePaged.results
+            }
+
+            if (pokemonPaged.isNotEmpty()) {
+                with(sharedPreferences.edit()) {
+                    if (!sharedPreferences.contains("initialized")) {
+                        putBoolean("initialized", true)
+                        apply()
+                    }
+                }
             }
 
             val favorites = pokemonDao.getFavorites()
@@ -121,12 +139,4 @@ class PokemonRemoteMediator(
                 remoteKeysDao.remoteKeysPokemonId(pokemon.id)
             }
     }
-
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, Pokemon>): RemoteKeys? {
-        return state.pages.firstOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
-            ?.let { pokemon ->
-                remoteKeysDao.remoteKeysPokemonId(pokemon.id)
-            }
-    }
-
 }
