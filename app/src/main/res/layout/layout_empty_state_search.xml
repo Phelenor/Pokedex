@@ -8,12 +8,15 @@
 
     <ImageView
         android:id="@+id/shocked_pikachu"
-        android:layout_width="302dp"
-        android:layout_height="388dp"
-        android:src="@drawable/image_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/pokemon_placeholder"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/text_empty"
@@ -21,7 +24,7 @@
         android:textColor="@color/cold_gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="64dp"
         android:text="@string/no_pokemons_found"
         app:layout_constraintBottom_toBottomOf="@+id/shocked_pikachu"
         app:layout_constraintEnd_toEndOf="parent"

@@ -88,46 +88,59 @@ class SearchFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launchWhenCreated {
                 adapter.loadStateFlow
                     .collect { loadState ->
-                        when (loadState.mediator?.refresh) {
-                            is LoadState.Loading -> {
-                                progressBarSearch.isVisible = true
-                                errorStateSearch.root.isVisible = false
-                                recyclerViewMain.isVisible = false
-                                emptyStateSearch.root.isVisible = false
+                        val mediatorRefreshState = loadState.mediator?.refresh
+                        val sourceRefreshState = loadState.source.refresh
 
-                            }
-                            is LoadState.NotLoading -> {
-                                progressBarSearch.isVisible = false
-                                errorStateSearch.root.isVisible = false
-                                recyclerViewMain.isVisible = adapter.itemCount > 0
-                                emptyStateSearch.root.isVisible = adapter.itemCount == 0
+                        if (mediatorRefreshState is LoadState.Error || sourceRefreshState is LoadState.Error) {
+                            progressBarSearch.isVisible = false
+                            recyclerViewMain.isVisible = adapter.itemCount > 0
 
-                            }
-                            is LoadState.Error -> {
-                                progressBarSearch.isVisible = false
-                                recyclerViewMain.isVisible = adapter.itemCount > 0
+                            val noCachedResults =
+                                adapter.itemCount < 1 && loadState.source.append.endOfPaginationReached
 
-                                val noCachedResults =
-                                    adapter.itemCount < 1 && loadState.source.append.endOfPaginationReached
-
-                                errorStateSearch.root.isVisible = noCachedResults
-                                if (noCachedResults) {
-                                    val sb = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
-                                    sb.view.setBackgroundColor(Color.TRANSPARENT);
-                                    val sbLayout = sb.view as Snackbar.SnackbarLayout
-                                    val sbBinding = LayoutSnackbarBinding.inflate(layoutInflater)
-                                    sbLayout.addView(sbBinding.root, 0)
-                                    sbBinding.message.text = getString(R.string.check_connection)
-                                    sbBinding.message.backgroundTintList =
-                                        ColorStateList.valueOf(resources.getColor(R.color.error))
-                                    sbBinding.snackbarClose.setOnClickListener {
-                                        sb.dismiss()
-                                    }
-                                    sb.show()
-                                } else {
-                                    emptyStateSearch.root.isVisible = true
+                            errorStateSearch.root.isVisible = noCachedResults
+                            if (noCachedResults) {
+                                val sb = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
+                                sb.view.setBackgroundColor(Color.TRANSPARENT);
+                                val sbLayout = sb.view as Snackbar.SnackbarLayout
+                                val sbBinding = LayoutSnackbarBinding.inflate(layoutInflater)
+                                sbLayout.addView(sbBinding.root, 0)
+                                sbBinding.message.text = getString(R.string.check_connection)
+                                sbBinding.message.backgroundTintList =
+                                    ColorStateList.valueOf(resources.getColor(R.color.error))
+                                sbBinding.snackbarClose.setOnClickListener {
+                                    sb.dismiss()
                                 }
+                                sb.show()
+                            } else {
+                                emptyStateSearch.root.isVisible = true
                             }
+                        }
+
+                        if (mediatorRefreshState is LoadState.NotLoading
+                            && sourceRefreshState is LoadState.NotLoading
+                            && loadState.append.endOfPaginationReached
+                            && adapter.itemCount < 1
+                        ) {
+                            recyclerViewMain.isVisible = false
+                            emptyStateSearch.root.isVisible = true
+                            progressBarSearch.isVisible = false
+                        } else if (mediatorRefreshState is LoadState.NotLoading
+                            && sourceRefreshState is LoadState.NotLoading
+                            && adapter.itemCount == 0
+                        ) {
+                            recyclerViewMain.isVisible = false
+                            emptyStateSearch.root.isVisible = false
+                            progressBarSearch.isVisible = true
+                        } else if (mediatorRefreshState is LoadState.NotLoading
+                            && sourceRefreshState is LoadState.NotLoading
+                            && adapter.itemCount > 0
+                        ) {
+                            recyclerViewMain.isVisible = true
+                            emptyStateSearch.root.isVisible = false
+                            progressBarSearch.isVisible = false
+                        } else {
+                            emptyStateSearch.root.isVisible = false
                         }
                     }
             }
