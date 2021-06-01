@@ -12,8 +12,8 @@ import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.PokemonInfo
 import com.rafaelboban.pokedex.model.PokemonPagedResponse
 import com.rafaelboban.pokedex.model.PokemonSpecie
-import com.rafaelboban.pokedex.ui.viewmodels.NETWORK_PAGE_SIZE
 import com.rafaelboban.pokedex.utils.Constants.INITIALIZED
+import com.rafaelboban.pokedex.utils.Constants.NETWORK_PAGE_SIZE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_STARTING_PAGE_INDEX
 import kotlinx.coroutines.Dispatchers
