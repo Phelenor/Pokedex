@@ -2,22 +2,19 @@ package com.rafaelboban.pokedex.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
-import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.databinding.FragmentFavoritesBinding
 import com.rafaelboban.pokedex.ui.adapters.FavoritesAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.FavoritesViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class FavoritesFragment : Fragment() {
@@ -25,9 +22,6 @@ class FavoritesFragment : Fragment() {
     private val viewModel by viewModels<FavoritesViewModel>()
     private lateinit var binding: FragmentFavoritesBinding
     private lateinit var adapter: FavoritesAdapter
-
-    @Inject
-    lateinit var db: PokemonDao
 
     private val itemTouchHelper by lazy {
         val itemTouchCallback =
@@ -65,7 +59,16 @@ class FavoritesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavoritesBinding.inflate(layoutInflater)
-        adapter = FavoritesAdapter(mutableListOf(), db, this)
+        adapter = FavoritesAdapter(mutableListOf(),
+            onFavoriteClick = { favorite ->
+                viewModel.deleteFavorite(favorite)
+            },
+            onFavoritesEdit = { holder ->
+                this.startDragging(holder)
+                true
+            }
+        )
+
 
         binding.apply {
             recyclerViewFavorites.setHasFixedSize(false)
@@ -105,39 +108,18 @@ class FavoritesFragment : Fragment() {
                         if (adapter.itemCount == 0) View.VISIBLE else View.GONE
 
                     toolbarFavorites.buttonEdit.visibility =
-                        if (adapter.itemCount != 0 && !adapter.FAVORITES_EDIT_MODE) View.VISIBLE
+                        if (adapter.itemCount != 0 && !adapter.favoritesModeEdit) View.VISIBLE
                         else View.GONE
 
                     toolbarFavorites.buttonDone.visibility =
-                        if (adapter.itemCount != 0 && adapter.FAVORITES_EDIT_MODE) View.VISIBLE
+                        if (adapter.itemCount != 0 && adapter.favoritesModeEdit) View.VISIBLE
                         else {
-                            adapter.FAVORITES_EDIT_MODE = false
+                            adapter.favoritesModeEdit = false
                             View.GONE
                         }
                 }
             }
         })
-
-//        viewModel.status.observe(viewLifecycleOwner, {
-//            val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
-//            snackbar.view.setBackgroundColor(Color.TRANSPARENT);
-//            val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
-//            snackbarLayout.setPadding(0, 0, 0, 0);
-//            val snackBinding = SnackbarBinding.inflate(LayoutInflater.from(context))
-//            if (!it) {
-//                snackBinding.snackbarClose.setOnClickListener {
-//                    snackbar.dismiss()
-//                }
-//                snackBinding.message.text = getString(R.string.network_error)
-//                snackBinding.message.backgroundTintList = ColorStateList.valueOf(
-//                    resources.getColor(
-//                        R.color.error
-//                    )
-//                )
-//                snackbarLayout.addView(snackBinding.root, 0)
-//                snackbar.show()
-//            }
-//        })
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -145,7 +127,7 @@ class FavoritesFragment : Fragment() {
         binding.toolbarFavorites.buttonEdit.setOnClickListener {
             binding.toolbarFavorites.buttonEdit.visibility = View.GONE
             binding.toolbarFavorites.buttonDone.visibility = View.VISIBLE
-            adapter.FAVORITES_EDIT_MODE = true
+            adapter.favoritesModeEdit = true
             itemTouchHelper.attachToRecyclerView(binding.recyclerViewFavorites)
             adapter.notifyDataSetChanged()
         }
@@ -154,10 +136,10 @@ class FavoritesFragment : Fragment() {
             binding.toolbarFavorites.buttonDone.visibility = View.GONE
             binding.toolbarFavorites.buttonEdit.visibility = View.VISIBLE
             itemTouchHelper.attachToRecyclerView(null)
-            adapter.FAVORITES_EDIT_MODE = false
+            adapter.favoritesModeEdit = false
             adapter.notifyDataSetChanged()
 
-            viewModel.updateFavorites(adapter.pokemonList)
+            viewModel.updateFavorites(adapter.favorites)
         }
     }
 

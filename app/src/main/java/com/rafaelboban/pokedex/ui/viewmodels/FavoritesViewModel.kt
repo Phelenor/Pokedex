@@ -25,12 +25,19 @@ class FavoritesViewModel @Inject constructor(val pokemonDao: PokemonDao) : ViewM
         }
     }
 
-    fun updateFavorites(pokemonList: List<Favorite>) {
+    fun deleteFavorite(favorite: Favorite) {
+        viewModelScope.launch {
+            pokemonDao.deleteFavorite(favorite.pokemon.idClass.name)
+            pokemonDao.updatePokemon(favorite.pokemon.id, 0)
+        }
+    }
+
+    fun updateFavorites(favorites: List<Favorite>) {
         viewModelScope.launch {
             pokemonDao.clearFavorites()
-            for (i in pokemonList.indices) {
-                pokemonList[i].id = i + 1
-                pokemonDao.insertFavorite(pokemonList[i])
+            for (i in favorites.indices) {
+                favorites[i].id = i + 1
+                pokemonDao.insertFavorite(favorites[i])
             }
         }
     }

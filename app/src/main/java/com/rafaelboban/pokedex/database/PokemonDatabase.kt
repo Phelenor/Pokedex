@@ -4,7 +4,6 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.rafaelboban.pokedex.data.RemoteKeys
-import com.rafaelboban.pokedex.data.RemoteKeysDao
 import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.lang.LanguageId

@@ -7,19 +7,21 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import com.rafaelboban.pokedex.api.ApiService
 import com.rafaelboban.pokedex.database.PokemonDao
+import com.rafaelboban.pokedex.database.RemoteKeysDao
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.PokemonInfo
 import com.rafaelboban.pokedex.model.PokemonPagedResponse
 import com.rafaelboban.pokedex.model.PokemonSpecie
 import com.rafaelboban.pokedex.ui.viewmodels.NETWORK_PAGE_SIZE
+import com.rafaelboban.pokedex.utils.Constants.INITIALIZED
+import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
+import com.rafaelboban.pokedex.utils.Constants.POKEMON_STARTING_PAGE_INDEX
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import retrofit2.HttpException
 import java.io.IOException
-
-private const val POKEMON_STARTING_PAGE_INDEX = 0
 
 @ExperimentalPagingApi
 class PokemonRemoteMediator(
@@ -31,7 +33,7 @@ class PokemonRemoteMediator(
 
     override suspend fun initialize(): InitializeAction {
 
-        return if (!sharedPreferences.contains("initialized")) {
+        return if (!sharedPreferences.contains(INITIALIZED)) {
             InitializeAction.LAUNCH_INITIAL_REFRESH
         } else {
             InitializeAction.SKIP_INITIAL_REFRESH
@@ -54,7 +56,7 @@ class PokemonRemoteMediator(
 
         try {
 
-            val pokemonPaged = if (page * state.config.pageSize > 898) {
+            val pokemonPaged = if (page * state.config.pageSize > POKEMON_LIST_SIZE) {
                 listOf()
             } else {
                 val responsePaged: PokemonPagedResponse =
@@ -64,14 +66,12 @@ class PokemonRemoteMediator(
 
             if (pokemonPaged.isNotEmpty()) {
                 with(sharedPreferences.edit()) {
-                    if (!sharedPreferences.contains("initialized")) {
-                        putBoolean("initialized", true)
+                    if (!sharedPreferences.contains(INITIALIZED)) {
+                        putBoolean(INITIALIZED, true)
                         apply()
                     }
                 }
             }
-
-            val favorites = pokemonDao.getFavorites()
 
             val specieInfo: List<PokemonSpecie>
             val pokemonInfo: List<PokemonInfo>
@@ -96,12 +96,6 @@ class PokemonRemoteMediator(
             val pokemon = mutableListOf<Pokemon>()
 
             for (i in pokemonPaged.indices) {
-                for (favorite in favorites) {
-                    if (pokemonPaged[i].pokemonId == favorite.pokemon.idClass.pokemonId) {
-                        pokemonPaged[i].isFavorite = true
-                        break
-                    }
-                }
                 pokemon.add(
                     Pokemon(
                         pokemonPaged[i].pokemonId,

@@ -16,7 +16,6 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.rafaelboban.pokedex.R
-import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.databinding.FragmentSearchBinding
 import com.rafaelboban.pokedex.databinding.LayoutSnackbarBinding
 import com.rafaelboban.pokedex.ui.adapters.PokemonListAdapter
@@ -24,7 +23,6 @@ import com.rafaelboban.pokedex.ui.adapters.PokemonListLoadStateAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
@@ -32,9 +30,6 @@ class SearchFragment : Fragment() {
     private val viewModel by viewModels<SearchViewModel>()
     private lateinit var binding: FragmentSearchBinding
     private lateinit var adapter: PokemonListAdapter
-
-    @Inject
-    lateinit var db: PokemonDao
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -135,6 +130,10 @@ class SearchFragment : Fragment() {
                             }
                         }
                     }
+            }
+
+            errorStateSearch.buttonRetry.setOnClickListener {
+                adapter.retry()
             }
         }
     }

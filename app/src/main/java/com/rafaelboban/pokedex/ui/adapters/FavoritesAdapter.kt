@@ -9,24 +9,22 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.rafaelboban.pokedex.R
-import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.databinding.CardPokemonItemBinding
 import com.rafaelboban.pokedex.model.Favorite
-import com.rafaelboban.pokedex.ui.FavoritesFragment
+import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_KEY
+import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_ID
+import com.rafaelboban.pokedex.utils.Constants.PREFERENCES_DEFAULT
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.getSprite
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.*
 
 class FavoritesAdapter(
-    var pokemonList: List<Favorite>,
-    private val pokemonDao: PokemonDao,
-    private val fragmentReference: FavoritesFragment
+    var favorites: List<Favorite>,
+    private val onFavoriteClick: (Favorite) -> Unit,
+    private val onFavoritesEdit: (RecyclerView.ViewHolder) -> Boolean
 ) : RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder>() {
 
-    var FAVORITES_EDIT_MODE = false
+    var favoritesModeEdit = false
 
     inner class FavoritesViewHolder(val binding: CardPokemonItemBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -39,78 +37,53 @@ class FavoritesAdapter(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: FavoritesViewHolder, position: Int) {
-        val pokemon = pokemonList[position]
+        val favorite = favorites[position]
 
         holder.binding.apply {
-            pokemonImage.load(pokemon.pokemon.idClass.getSprite()) {
-                listener(
-                    onStart = {
-                        imageLoadProgressbar.visibility = View.VISIBLE
-                        pokemonImage.visibility = View.GONE
-                        imagePlaceholder.visibility = View.GONE
-                    },
-                    onSuccess = { _, _ ->
-                        imageLoadProgressbar.visibility = View.GONE
-                        pokemonImage.visibility = View.VISIBLE
-                        imagePlaceholder.visibility = View.GONE
-                    },
-                    onError = { _, _ ->
-                        imageLoadProgressbar.visibility = View.GONE
-                        pokemonImage.visibility = View.GONE
-                        imagePlaceholder.visibility = View.VISIBLE
-                    }
-
-                )
+            pokemonImage.load(favorite.pokemon.idClass.getSprite()) {
+                placeholder(R.drawable.pokemon_placeholder)
+                error(R.drawable.pokemon_placeholder_error)
             }
 
-            if (pokemon.pokemon.idClass.isFavorite) {
+            if (favorite.pokemon.idClass.isFavorite) {
                 favoriteButton.setImageDrawable(
                     ResourcesCompat.getDrawable(
                         root.resources,
                         R.drawable.ic_star_1, null
                     )
                 )
-            } else {
-                favoriteButton.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        root.resources,
-                        R.drawable.ic_star_0, null
-                    )
-                )
             }
 
-            val sp = root.context.getSharedPreferences("default", Context.MODE_PRIVATE)
-            val langId = sp.getInt("langId", 0)
+            val preferences = root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
+            val languageId = preferences.getInt(LANGUAGE_KEY, 0)
 
-            if (sp.getInt("langId", 0) == 9) {
-                pokemonName.text = pokemon.pokemon.idClass.name.capitalize()
+            if (preferences.getInt(LANGUAGE_KEY, 0) == LANG_ENGLISH_ID) {
+                pokemonName.text = favorite.pokemon.idClass.name.capitalize()
             } else {
-                for (name in pokemon.pokemon.specieClass.names) {
-                    if (name.language.url.extractLangId() == langId) {
+                for (name in favorite.pokemon.specieClass.names) {
+                    if (name.language.url.extractLangId() == languageId) {
                         pokemonName.text = name.name.capitalize()
                         break
                     }
                 }
             }
-            pokemonId.text = pokemon.pokemon.idClass.pokemonId.toString().padStart(3, '0')
+            pokemonId.text = favorite.pokemon.idClass.pokemonId.toString().padStart(3, '0')
 
-            if (FAVORITES_EDIT_MODE) {
+            if (favoritesModeEdit) {
                 reorderIcon.visibility = View.VISIBLE
             } else {
                 reorderIcon.visibility = View.GONE
             }
 
             favoriteButton.setOnClickListener {
-                if (pokemon.pokemon.idClass.isFavorite) {
-                    pokemon.pokemon.idClass.isFavorite = false
-                    pokemon.id = null
+                if (favorite.pokemon.idClass.isFavorite) {
+                    favorite.pokemon.idClass.isFavorite = false
+                    favorite.id = null
 
-                    (pokemonList as ArrayList).remove(pokemon)
+                    (favorites as ArrayList).remove(favorite)
                     notifyItemRemoved(holder.bindingAdapterPosition)
 
-                    CoroutineScope(Dispatchers.IO).launch {
-                        pokemonDao.deleteFavorite(pokemon.pokemon.idClass.name)
-                    }
+                    onFavoriteClick(favorite)
 
                     favoriteButton.setImageDrawable(
                         ResourcesCompat.getDrawable(
@@ -118,39 +91,21 @@ class FavoritesAdapter(
                             R.drawable.ic_star_0, null
                         )
                     )
-                } else {
-                    pokemon.pokemon.idClass.isFavorite = true
-
-                    CoroutineScope(Dispatchers.IO).launch {
-                        pokemonDao.insertFavorite(Favorite(pokemon = pokemon.pokemon))
-                    }
-
-                    favoriteButton.setImageDrawable(
-                        ResourcesCompat.getDrawable(
-                            root.resources,
-                            R.drawable.ic_star_1, null
-                        )
-                    )
                 }
             }
 
-            reorderIcon.setOnTouchListener { v, event ->
-                fragmentReference.startDragging(holder)
-                true
-            }
-
+            reorderIcon.setOnTouchListener { _, _ -> onFavoritesEdit(holder) }
         }
-
     }
 
-    override fun getItemCount() = pokemonList.size
+    override fun getItemCount() = favorites.size
 
     fun setPokemon(pokemon: List<Favorite>) {
-        this.pokemonList = pokemon
+        this.favorites = pokemon
         notifyDataSetChanged()
     }
 
     fun moveItem(from: Int, to: Int) {
-        Collections.swap(pokemonList, from, to)
+        Collections.swap(favorites, from, to)
     }
 }

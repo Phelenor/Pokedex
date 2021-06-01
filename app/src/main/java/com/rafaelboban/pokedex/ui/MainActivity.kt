@@ -10,6 +10,11 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.ActivityMainBinding
+import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_KEY
+import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_NAME
+import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_ID
+import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_NAME
+import com.rafaelboban.pokedex.utils.Constants.PREFERENCES_DEFAULT
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,11 +41,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupDefaultLanguage() {
-        val sp = getSharedPreferences("default", Context.MODE_PRIVATE)
-        with (sp.edit()) {
-            if (!sp.contains("langId")) {
-                putInt("langId", 9)
-                putString("langName", "English")
+        val preferences = getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
+        with (preferences.edit()) {
+            if (!preferences.contains(LANGUAGE_KEY)) {
+                putInt(LANGUAGE_KEY, LANG_ENGLISH_ID)
+                putString(LANGUAGE_NAME, LANG_ENGLISH_NAME)
                 apply()
             }
         }

@@ -2,7 +2,6 @@ package com.rafaelboban.pokedex.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.paging.PagingDataAdapter
@@ -71,24 +70,8 @@ class PokemonListAdapter(
             val pokemonBase = pokemon.idClass
             binding.apply {
                 pokemonImage.load(pokemonBase.getSprite()) {
-                    listener(
-                        onStart = {
-                            imageLoadProgressbar.visibility = View.VISIBLE
-                            pokemonImage.visibility = View.GONE
-                            imagePlaceholder.visibility = View.GONE
-                        },
-                        onSuccess = { _, _ ->
-                            imageLoadProgressbar.visibility = View.GONE
-                            pokemonImage.visibility = View.VISIBLE
-                            imagePlaceholder.visibility = View.GONE
-                        },
-                        onError = { _, _ ->
-                            imageLoadProgressbar.visibility = View.GONE
-                            pokemonImage.visibility = View.GONE
-                            imagePlaceholder.visibility = View.VISIBLE
-                        }
-
-                    )
+                    placeholder(R.drawable.pokemon_placeholder)
+                    error(R.drawable.pokemon_placeholder_error)
                 }
 
                 if (pokemonBase.isFavorite) {

@@ -21,6 +21,10 @@ import com.rafaelboban.pokedex.databinding.DialogClearBinding
 import com.rafaelboban.pokedex.databinding.FragmentSettingsBinding
 import com.rafaelboban.pokedex.databinding.LayoutSnackbarBinding
 import com.rafaelboban.pokedex.ui.viewmodels.SettingsViewModel
+import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_KEY
+import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_NAME
+import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_NAME
+import com.rafaelboban.pokedex.utils.Constants.PREFERENCES_DEFAULT
 import com.rafaelboban.pokedex.utils.extractLangId
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,14 +48,14 @@ class SettingsFragment : Fragment() {
         return binding.root
     }
 
-    private fun saveLanguagePreferences(id: Int, name: String = "English"): Boolean {
-        val sp = activity?.getSharedPreferences("default", Context.MODE_PRIVATE)!!
-        if (sp.getInt("langId", 0) == id) {
+    private fun saveLanguagePreferences(id: Int, name: String = LANG_ENGLISH_NAME): Boolean {
+        val preferences = activity?.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)!!
+        if (preferences.getInt(LANGUAGE_KEY, 0) == id) {
             return false
         } else {
-            with(sp.edit()) {
-                putInt("langId", id)
-                putString("langName", name)
+            with(preferences.edit()) {
+                putInt(LANGUAGE_KEY, id)
+                putString(LANGUAGE_NAME, name)
                 apply()
                 return true
             }
@@ -71,7 +75,7 @@ class SettingsFragment : Fragment() {
 
     private fun setupSpinner() {
         val currentLanguage =
-            activity?.getSharedPreferences("default", Context.MODE_PRIVATE)!!.getString("langName", "")
+            activity?.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)!!.getString(LANGUAGE_NAME, "")
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, languages)
         binding.languageMenu.setAdapter(arrayAdapter)
         binding.languageMenu.setText(currentLanguage, false)

@@ -6,12 +6,14 @@ import androidx.lifecycle.*
 import androidx.paging.*
 import com.rafaelboban.pokedex.api.ApiService
 import com.rafaelboban.pokedex.data.PokemonRemoteMediator
-import com.rafaelboban.pokedex.data.RemoteKeysDao
 import com.rafaelboban.pokedex.database.PokemonDao
+import com.rafaelboban.pokedex.database.RemoteKeysDao
 import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.UiModel
 import com.rafaelboban.pokedex.model.lang.LanguageId
+import com.rafaelboban.pokedex.utils.Constants.NETWORK_PAGE_SIZE
+import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
 import com.rafaelboban.pokedex.utils.extractGeneration
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.filterAll
@@ -21,8 +23,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-const val NETWORK_PAGE_SIZE = 20
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
@@ -35,9 +35,9 @@ class SearchViewModel @Inject constructor(
     private val currentQuery = MutableLiveData("")
     private val rangeRegex = "^[0-9]+(-([0-9])+)*\$".toRegex()
 
-    val handler: CoroutineExceptionHandler by lazy {
+    private val handler: CoroutineExceptionHandler by lazy {
         CoroutineExceptionHandler { _, exception ->
-            Log.e("EXCEPTION", "$exception")
+            Log.e("COROUTINE_EXCEPTION", "$exception")
         }
     }
 
@@ -109,7 +109,7 @@ class SearchViewModel @Inject constructor(
         },
         {
             var currentQuery = query
-            var end = 898
+            var end = POKEMON_LIST_SIZE
             if (query.isNotBlank() && query[query.lastIndex] == '-') currentQuery =
                 query.substring(0 until query.lastIndex)
             if (rangeRegex.matches(currentQuery)) {

@@ -2,11 +2,14 @@ package com.rafaelboban.pokedex.di
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.rafaelboban.pokedex.api.ApiService
-import com.rafaelboban.pokedex.data.RemoteKeysDao
 import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.database.PokemonDatabase
+import com.rafaelboban.pokedex.database.RemoteKeysDao
+import com.rafaelboban.pokedex.utils.Constants.POKEAPI_BASE_URL
+import com.rafaelboban.pokedex.utils.Constants.PREFERENCES_DEFAULT
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,8 +24,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val BASE_URL = "https://pokeapi.co/api/v2/"
-
     @Provides
     @Singleton
     fun provideRetrofit() : Retrofit {
@@ -32,7 +33,7 @@ object AppModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(POKEAPI_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
@@ -60,6 +61,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideSharedPreferences(app: Application) =
-        app.getSharedPreferences("default", Context.MODE_PRIVATE)
+    fun provideSharedPreferences(app: Application): SharedPreferences =
+        app.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
 }
