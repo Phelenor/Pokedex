@@ -1,6 +1,7 @@
 package com.rafaelboban.pokedex.model
 
 import androidx.room.Entity
+import java.io.Serializable
 
 @Entity
 data class PokemonInfo(
@@ -10,4 +11,4 @@ data class PokemonInfo(
     val stats: List<StatInfo>,
     val types: List<TypeInfo>,
     val weight: Int
-)
+) : Serializable

@@ -1,5 +1,7 @@
 package com.rafaelboban.pokedex.utils
 
+var ACTIVITY_STARTED_ID = 0
+
 object Constants {
     const val INITIALIZED = "Initialized"
     const val LANG_ENGLISH_ID = 9
@@ -11,4 +13,7 @@ object Constants {
     const val POKEMON_LIST_SIZE = 898
     const val POKEAPI_BASE_URL = "https://pokeapi.co/api/v2/"
     const val NETWORK_PAGE_SIZE = 20
+    const val EXTRA_POKEMON = "Pokemon"
+    const val KG_TO_LBS = 2.20462262
+    const val METER_TO_IN = 39.3700787
 }

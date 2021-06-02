@@ -1,6 +1,7 @@
 package com.rafaelboban.pokedex.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rafaelboban.pokedex.databinding.FragmentFavoritesBinding
 import com.rafaelboban.pokedex.ui.adapters.FavoritesAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.FavoritesViewModel
+import com.rafaelboban.pokedex.utils.ACTIVITY_STARTED_ID
+import com.rafaelboban.pokedex.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -66,6 +69,13 @@ class FavoritesFragment : Fragment() {
             onFavoritesEdit = { holder ->
                 this.startDragging(holder)
                 true
+            },
+            onPokemonClick = { pokemon ->
+                ACTIVITY_STARTED_ID = pokemon.id
+                val intent = Intent(context, PokemonActivity::class.java).apply {
+                    putExtra(Constants.EXTRA_POKEMON, pokemon)
+                }
+                requireActivity().startActivity(intent)
             }
         )
 
@@ -81,6 +91,11 @@ class FavoritesFragment : Fragment() {
         setupObservers()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.notifyItemChanged(ACTIVITY_STARTED_ID)
     }
 
     private fun setupObservers() {

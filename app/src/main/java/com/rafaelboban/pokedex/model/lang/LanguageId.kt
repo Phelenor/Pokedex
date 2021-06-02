@@ -2,6 +2,7 @@ package com.rafaelboban.pokedex.model.lang
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "languages")
 data class LanguageId(
@@ -10,4 +11,4 @@ data class LanguageId(
     val url: String,
     var nameEnglish: String? = null,
     var nameNative: String? = null
-)
+) : Serializable

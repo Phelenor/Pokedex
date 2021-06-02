@@ -32,4 +32,9 @@
         <item name="colorPrimary">@color/tint_secondary</item>
     </style>
 
+    <style name="TypeButtonTheme">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">100%</item>
+    </style>
+
 </resources>

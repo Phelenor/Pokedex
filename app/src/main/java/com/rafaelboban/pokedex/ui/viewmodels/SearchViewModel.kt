@@ -12,6 +12,7 @@ import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.UiModel
 import com.rafaelboban.pokedex.model.lang.LanguageId
+import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_KEY
 import com.rafaelboban.pokedex.utils.Constants.NETWORK_PAGE_SIZE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
 import com.rafaelboban.pokedex.utils.extractGeneration
@@ -89,8 +90,11 @@ class SearchViewModel @Inject constructor(
 
     private fun generateFilters(query: String) = listOf<(Pokemon) -> Boolean>(
         { query.isBlank() },
-        {
-            val names = it.specieClass.names.map { translation ->
+        { pokemon ->
+            val lang = sharedPreferences.getInt(LANGUAGE_KEY, 9)
+            val names = pokemon.specieClass.names.filter {
+                it.language.url.extractLangId() == lang
+            }.map { translation ->
                 translation.name.lowercase()
             }
 
@@ -100,7 +104,7 @@ class SearchViewModel @Inject constructor(
             false
         },
 
-        { it.idClass.name.startsWith(query) },
+        { it.idClass.name.lowercase().startsWith(query.lowercase()) },
         { query == it.idClass.pokemonId.toString().padStart(3, '0') },
         {
             query in it.infoClass.types.map { typeInfo ->

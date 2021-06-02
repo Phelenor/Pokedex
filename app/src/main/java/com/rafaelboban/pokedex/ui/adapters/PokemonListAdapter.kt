@@ -22,8 +22,8 @@ import com.rafaelboban.pokedex.utils.toRoman
 
 
 class PokemonListAdapter(
-    private val onPokemonClick: (Pokemon) -> Unit,
-    private val onFavoriteClick: (Pokemon) -> Unit
+    private val onFavoriteClick: (Pokemon) -> Unit,
+    private val onPokemonClick: (Pokemon) -> Unit
 ) :
     PagingDataAdapter<UiModel, RecyclerView.ViewHolder>(POKEMON_COMPARATOR) {
 
@@ -108,7 +108,11 @@ class PokemonListAdapter(
                     }
                 }
 
-                pokemonId.text = pokemonBase.pokemonId.toString().padStart(3, '0')
+                pokemonId.text = "%03d".format(pokemon.id)
+
+                binding.pokemonCard.setOnClickListener {
+                    onPokemonClick(pokemon)
+                }
 
                 favoriteButton.setOnClickListener {
                     if (pokemonBase.isFavorite) {

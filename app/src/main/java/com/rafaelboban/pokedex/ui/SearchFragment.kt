@@ -21,6 +21,8 @@ import com.rafaelboban.pokedex.databinding.LayoutSnackbarBinding
 import com.rafaelboban.pokedex.ui.adapters.PokemonListAdapter
 import com.rafaelboban.pokedex.ui.adapters.PokemonListLoadStateAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.SearchViewModel
+import com.rafaelboban.pokedex.utils.ACTIVITY_STARTED_ID
+import com.rafaelboban.pokedex.utils.Constants.EXTRA_POKEMON
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -39,7 +41,10 @@ class SearchFragment : Fragment() {
 
         adapter = PokemonListAdapter(
             onPokemonClick = { pokemon ->
-                val intent = Intent(Intent.ACTION_VIEW)
+                ACTIVITY_STARTED_ID = pokemon.id
+                val intent = Intent(context, PokemonActivity::class.java).apply {
+                    putExtra(EXTRA_POKEMON, pokemon)
+                }
                 requireActivity().startActivity(intent)
             },
             onFavoriteClick = { pokemon ->
@@ -64,6 +69,10 @@ class SearchFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        adapter.notifyItemChanged(ACTIVITY_STARTED_ID)
+    }
 
     private fun setupListeners() {
 

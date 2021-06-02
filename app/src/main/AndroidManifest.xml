@@ -14,9 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pokedex">
         <activity
+            android:name=".ui.PokemonActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Pokedex.PokemonActivity" />
+        <activity
             android:name=".ui.AboutActivity"
             android:exported="true"
-            android:theme="@style/Theme.Pokedex.PokemonActivity"/>
+            android:theme="@style/Theme.Pokedex.PokemonActivity" />
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"

@@ -11,6 +11,7 @@ import coil.load
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.CardPokemonItemBinding
 import com.rafaelboban.pokedex.model.Favorite
+import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_KEY
 import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_ID
 import com.rafaelboban.pokedex.utils.Constants.PREFERENCES_DEFAULT
@@ -21,7 +22,8 @@ import java.util.*
 class FavoritesAdapter(
     var favorites: List<Favorite>,
     private val onFavoriteClick: (Favorite) -> Unit,
-    private val onFavoritesEdit: (RecyclerView.ViewHolder) -> Boolean
+    private val onFavoritesEdit: (RecyclerView.ViewHolder) -> Boolean,
+    private val onPokemonClick: (Pokemon) -> Unit
 ) : RecyclerView.Adapter<FavoritesAdapter.FavoritesViewHolder>() {
 
     var favoritesModeEdit = false
@@ -67,7 +69,11 @@ class FavoritesAdapter(
                     }
                 }
             }
-            pokemonId.text = favorite.pokemon.idClass.pokemonId.toString().padStart(3, '0')
+            pokemonId.text = "%03d".format(favorite.pokemon.id)
+
+            pokemonCard.setOnClickListener {
+                if (!favoritesModeEdit) onPokemonClick(favorite.pokemon)
+            }
 
             if (favoritesModeEdit) {
                 reorderIcon.visibility = View.VISIBLE

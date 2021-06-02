@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_marginTop="4dp"
-    android:paddingBottom="4dp">
+    android:layout_height="104dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/pokemon_card"
@@ -13,11 +11,14 @@
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:background="?android:attr/selectableItemBackground"
+        android:background="@color/surface_1"
         android:clickable="true"
         android:elevation="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="12dp"
-        app:cardElevation="1dp"
+        app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/reorder_icon"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,8 +71,8 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="32dp"
-                android:padding="4dp"
                 android:clickable="true"
+                android:padding="4dp"
                 android:src="@drawable/ic_star_0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
