@@ -146,6 +146,7 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch(handler) {
             var languages = pokemonDao.getLanguages()
             if (languages.isEmpty()) {
+                Log.d("SETUP", "lang setup")
                 languages = apiService.getLanguages().results as MutableList<LanguageId>
                 val fetchLanguageData = languages.map { lang ->
                     async {

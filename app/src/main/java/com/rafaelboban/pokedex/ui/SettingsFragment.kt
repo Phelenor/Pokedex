@@ -2,6 +2,7 @@ package com.rafaelboban.pokedex.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
@@ -21,10 +22,10 @@ import com.rafaelboban.pokedex.databinding.DialogClearBinding
 import com.rafaelboban.pokedex.databinding.FragmentSettingsBinding
 import com.rafaelboban.pokedex.databinding.LayoutSnackbarBinding
 import com.rafaelboban.pokedex.ui.viewmodels.SettingsViewModel
+import com.rafaelboban.pokedex.utils.Constants
 import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_KEY
 import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_NAME
 import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_NAME
-import com.rafaelboban.pokedex.utils.Constants.PREFERENCES_DEFAULT
 import com.rafaelboban.pokedex.utils.extractLangId
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,12 +36,14 @@ class SettingsFragment : Fragment() {
     private val viewModel by viewModels<SettingsViewModel>()
     private lateinit var binding: FragmentSettingsBinding
     private var languages = listOf<String>()
+    private lateinit var preferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
+        preferences = activity?.getSharedPreferences(Constants.PREFERENCES_DEFAULT, Context.MODE_PRIVATE)!!
 
         setupObservers()
         setupListeners()
@@ -49,7 +52,6 @@ class SettingsFragment : Fragment() {
     }
 
     private fun saveLanguagePreferences(id: Int, name: String = LANG_ENGLISH_NAME): Boolean {
-        val preferences = activity?.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)!!
         if (preferences.getInt(LANGUAGE_KEY, 0) == id) {
             return false
         } else {
@@ -75,7 +77,7 @@ class SettingsFragment : Fragment() {
 
     private fun setupSpinner() {
         val currentLanguage =
-            activity?.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)!!.getString(LANGUAGE_NAME, "")
+            preferences.getString(LANGUAGE_NAME, "")
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, languages)
         binding.languageMenu.setAdapter(arrayAdapter)
         binding.languageMenu.setText(currentLanguage, false)

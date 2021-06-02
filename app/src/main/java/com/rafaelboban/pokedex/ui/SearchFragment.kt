@@ -108,6 +108,7 @@ class SearchFragment : Fragment() {
                                 adapter.itemCount < 1 && loadState.source.append.endOfPaginationReached
 
                             errorStateSearch.root.isVisible = noCachedResults
+
                             if (noCachedResults) {
                                 val sb = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
                                 sb.view.setBackgroundColor(Color.TRANSPARENT);
@@ -134,6 +135,7 @@ class SearchFragment : Fragment() {
                             recyclerViewMain.isVisible = false
                             emptyStateSearch.root.isVisible = true
                             progressBarSearch.isVisible = false
+                            errorStateSearch.root.isVisible = false
                         } else if (mediatorRefreshState is LoadState.NotLoading
                             && sourceRefreshState is LoadState.NotLoading
                             && adapter.itemCount == 0
@@ -141,6 +143,7 @@ class SearchFragment : Fragment() {
                             recyclerViewMain.isVisible = false
                             emptyStateSearch.root.isVisible = false
                             progressBarSearch.isVisible = true
+                            errorStateSearch.root.isVisible = false
                         } else if (mediatorRefreshState is LoadState.NotLoading
                             && sourceRefreshState is LoadState.NotLoading
                             && adapter.itemCount > 0
@@ -148,6 +151,7 @@ class SearchFragment : Fragment() {
                             recyclerViewMain.isVisible = true
                             emptyStateSearch.root.isVisible = false
                             progressBarSearch.isVisible = false
+                            errorStateSearch.root.isVisible = false
                         } else {
                             emptyStateSearch.root.isVisible = false
                         }

@@ -13,8 +13,8 @@ import com.rafaelboban.pokedex.databinding.CardPokemonItemBinding
 import com.rafaelboban.pokedex.databinding.CardSeparatorItemBinding
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.UiModel
+import com.rafaelboban.pokedex.utils.Constants
 import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_KEY
-import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_ID
 import com.rafaelboban.pokedex.utils.Constants.PREFERENCES_DEFAULT
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.getSprite
@@ -92,21 +92,18 @@ class PokemonListAdapter(
                         )
                     )
                 }
-                val sp = root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
-                val langId = sp.getInt(LANGUAGE_KEY, 0)
-                if (langId == LANG_ENGLISH_ID) {
-                    pokemonName.text = pokemonBase.name.capitalize()
-                } else {
-                    for (name in pokemon.specieClass.names) {
-                        if (name.language.url.extractLangId() == langId) {
-                            pokemonName.text = name.name.capitalize()
-                            break
-                        }
-                    }
-                    if (pokemonName.text.isEmpty()) {
-                        pokemonName.text = pokemonBase.name.capitalize()
+
+                val langId = root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE).getInt(LANGUAGE_KEY, 0)
+
+                for (name in pokemon.specieClass.names) {
+                    if (name.language.url.extractLangId() == langId) {
+                        pokemonName.text = name.name.capitalize()
+                        break
+                    } else if (Constants.LANG_ENGLISH_ID == langId) {
+                        pokemonName.text = name.name.capitalize()
                     }
                 }
+
 
                 pokemonId.text = "%03d".format(pokemon.id)
 

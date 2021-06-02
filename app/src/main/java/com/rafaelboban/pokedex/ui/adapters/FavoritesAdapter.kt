@@ -12,8 +12,8 @@ import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.CardPokemonItemBinding
 import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.utils.Constants
 import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_KEY
-import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_ID
 import com.rafaelboban.pokedex.utils.Constants.PREFERENCES_DEFAULT
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.getSprite
@@ -56,19 +56,17 @@ class FavoritesAdapter(
                 )
             }
 
-            val preferences = root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
-            val languageId = preferences.getInt(LANGUAGE_KEY, 0)
+            val langId = root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE).getInt(LANGUAGE_KEY, 0)
 
-            if (preferences.getInt(LANGUAGE_KEY, 0) == LANG_ENGLISH_ID) {
-                pokemonName.text = favorite.pokemon.idClass.name.capitalize()
-            } else {
-                for (name in favorite.pokemon.specieClass.names) {
-                    if (name.language.url.extractLangId() == languageId) {
-                        pokemonName.text = name.name.capitalize()
-                        break
-                    }
+            for (name in favorite.pokemon.specieClass.names) {
+                if (name.language.url.extractLangId() == langId) {
+                    pokemonName.text = name.name.capitalize()
+                    break
+                } else if (Constants.LANG_ENGLISH_ID == langId) {
+                    pokemonName.text = name.name.capitalize()
                 }
             }
+
             pokemonId.text = "%03d".format(favorite.pokemon.id)
 
             pokemonCard.setOnClickListener {

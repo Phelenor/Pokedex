@@ -4,6 +4,7 @@ var ACTIVITY_STARTED_ID = 0
 
 object Constants {
     const val INITIALIZED = "Initialized"
+    const val INITIALIZED_LANGUAGES = "Languages Initialized"
     const val LANG_ENGLISH_ID = 9
     const val LANG_ENGLISH_NAME = "English"
     const val LANGUAGE_KEY = "Language ID"

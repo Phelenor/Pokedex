@@ -28,6 +28,7 @@
     <string name="generation_separator_text">Generation %1$s</string>
     <string name="height_format">%1$s\'%2$s\" (%3$s m)</string>
     <string name="weight_format">%1$s lbs. (%2$s kg)</string>
+    <string name="hidden_ability">Hidden Ability</string>
     <string-array name="languages">
         <item>English</item>
         <item>German</item>

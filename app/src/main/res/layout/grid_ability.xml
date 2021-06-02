@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ability_grid"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_marginBottom="16dp"
+    android:columnCount="3"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:rowCount="1"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ability_1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_columnWeight="1"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/ability_1_name"
+            style="@style/InputTextDarkCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Klorofil"
+            app:layout_constraintBottom_toTopOf="@+id/ability_1_hidden"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_goneMarginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/ability_1_hidden"
+            style="@style/AssistiveColdGrayCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hidden_ability"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ability_2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_columnWeight="1"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/ability_2_name"
+            style="@style/InputTextDarkCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Klorofil"
+            app:layout_constraintBottom_toTopOf="@+id/ability_2_hidden"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_goneMarginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/ability_2_hidden"
+            style="@style/AssistiveColdGrayCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hidden_ability"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ability_3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_columnWeight="1"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/ability_3_name"
+            style="@style/InputTextDarkCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Klorofil"
+            app:layout_constraintBottom_toTopOf="@+id/ability_3_hidden"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_goneMarginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/ability_3_hidden"
+            style="@style/AssistiveColdGrayCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hidden_ability"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</GridLayout>
+
+

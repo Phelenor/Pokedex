@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import coil.load
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.ActivityPokemonBinding
@@ -47,18 +48,13 @@ class PokemonActivity : AppCompatActivity() {
                 LANG_ENGLISH_ID
             )
 
-        if (langId == LANG_ENGLISH_ID) {
-            binding.collapsingToolbar.title = pokemon.idClass.name.capitalize()
-        } else {
-            for (name in pokemon.specieClass.names) {
-                if (name.language.url.extractLangId() == langId) {
-                    binding.collapsingToolbar.title = name.name.capitalize()
-                    break
-                }
-            }
 
-            if (binding.collapsingToolbar.title == null) {
-                binding.collapsingToolbar.title = pokemon.idClass.name.capitalize()
+        for (name in pokemon.specieClass.names) {
+            if (name.language.url.extractLangId() == langId) {
+                binding.collapsingToolbar.title = name.name.capitalize()
+                break
+            } else if (LANG_ENGLISH_ID == langId) {
+                binding.collapsingToolbar.title = name.name.capitalize()
             }
         }
 
@@ -97,9 +93,36 @@ class PokemonActivity : AppCompatActivity() {
                 "%.1f".format(heightM)
             )
 
+
+        displayAbilityGrid()
         setupListeners()
 
         setContentView(binding.root)
+    }
+
+    private fun displayAbilityGrid() {
+        val abilities = pokemon.infoClass.abilities
+        for (i in abilities.indices) {
+            if (i == 0) {
+                binding.apply {
+                    abilityGrid.ability1.isVisible = true
+                    abilityGrid.ability1Hidden.isVisible = abilities[i].is_hidden
+                    abilityGrid.ability1Name.text = abilities[i].ability.name.capitalize()
+                }
+            } else if (i == 1) {
+                binding.apply {
+                    abilityGrid.ability2.isVisible = true
+                    abilityGrid.ability2Hidden.isVisible = abilities[i].is_hidden
+                    abilityGrid.ability2Name.text = abilities[i].ability.name.capitalize()
+                }
+            } else if (i == 2) {
+                binding.apply {
+                    abilityGrid.ability3.isVisible = true
+                    abilityGrid.ability3Hidden.isVisible = abilities[i].is_hidden
+                    abilityGrid.ability3Name.text = abilities[i].ability.name.capitalize()
+                }
+            }
+        }
     }
 
     private fun setupListeners() {
@@ -132,7 +155,12 @@ class PokemonActivity : AppCompatActivity() {
                 .setView(dialogBinding.root)
                 .create()
 
-            dialog.window!!.setBackgroundDrawable(InsetDrawable(ColorDrawable(Color.TRANSPARENT), 128))
+            dialog.window!!.setBackgroundDrawable(
+                InsetDrawable(
+                    ColorDrawable(Color.TRANSPARENT),
+                    128
+                )
+            )
 
             val langId =
                 getSharedPreferences(Constants.PREFERENCES_DEFAULT, Context.MODE_PRIVATE).getInt(
