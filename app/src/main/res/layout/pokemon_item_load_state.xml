@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pokemon_load_state"
     android:layout_width="match_parent"
     android:layout_height="100dp"
@@ -46,16 +45,27 @@
 
             <TextView
                 android:id="@+id/load_fetching_tv"
-                android:layout_marginBottom="42dp"
+                android:layout_marginBottom="44dp"
                 style="@style/Headline3DarkCenter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fetching more Pokemon...."
+                android:text="@string/fetching_more_pokemon"
                 android:textColor="@color/tint_secondary"
                 app:layout_constraintBottom_toBottomOf="@+id/load_progressbar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/load_progressbar" />
+
+            <TextView
+                android:id="@+id/load_fetching_page"
+                style="@style/Headline3DarkCenter"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/tint_secondary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_retry"

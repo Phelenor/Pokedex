@@ -12,6 +12,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.LayoutSnackbarBinding
 import com.rafaelboban.pokedex.databinding.PokemonItemLoadStateBinding
+import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
+import com.rafaelboban.pokedex.utils.PAGE_FETCHING
 
 class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
     LoadStateAdapter<PokemonListLoadStateAdapter.LoadStateViewHolder>() {
@@ -45,14 +47,21 @@ class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
                 loadFetchingTv.isVisible = loadState is LoadState.Loading
                 buttonRetry.isVisible = loadState !is LoadState.Loading
 
+                loadFetchingPage.text = binding.root.context.getString(
+                    R.string.page_num,
+                    (PAGE_FETCHING * 20).toString(),
+                    POKEMON_LIST_SIZE.toString()
+                )
+
                 if (loadState !is LoadState.Loading) {
 
                     binding.loadCard.strokeColor = parent!!.resources.getColor(R.color.error)
 
                     val sb = Snackbar.make(parent!!, "", Snackbar.LENGTH_LONG)
-                    sb.view.setBackgroundColor(Color.TRANSPARENT);
+                    sb.view.setBackgroundColor(Color.TRANSPARENT)
                     val sbLayout = sb.view as Snackbar.SnackbarLayout
-                    val sbBinding = LayoutSnackbarBinding.inflate(LayoutInflater.from(parent!!.context))
+                    val sbBinding =
+                        LayoutSnackbarBinding.inflate(LayoutInflater.from(parent!!.context))
                     sbLayout.addView(sbBinding.root, 0)
                     sbBinding.message.text = parent!!.context.getString(R.string.check_connection)
                     sbBinding.message.backgroundTintList =
@@ -62,7 +71,8 @@ class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
                     }
                     sb.show()
                 } else {
-                    binding.loadCard.strokeColor = parent!!.resources.getColor(R.color.tint_secondary)
+                    binding.loadCard.strokeColor =
+                        parent!!.resources.getColor(R.color.tint_secondary)
                 }
 
             }

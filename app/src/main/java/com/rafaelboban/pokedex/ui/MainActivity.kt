@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupDefaultLanguage()
+        setupDefaultSettings()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
     }
 
-    private fun setupDefaultLanguage() {
+    private fun setupDefaultSettings() {
         val preferences = getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
         with (preferences.edit()) {
             if (!preferences.contains(LANGUAGE_KEY)) {

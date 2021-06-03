@@ -29,6 +29,22 @@
     <string name="height_format">%1$s\'%2$s\" (%3$s m)</string>
     <string name="weight_format">%1$s lbs. (%2$s kg)</string>
     <string name="hidden_ability">Hidden Ability</string>
+    <string name="stats">Stats</string>
+    <string name="abilities">Abilities</string>
+    <string name="speed">Speed:</string>
+    <string name="sp_def">Sp. Def:</string>
+    <string name="sp_atk">Sp. Atk:</string>
+    <string name="defense">Defense:</string>
+    <string name="attack">Attack:</string>
+    <string name="hp">HP:</string>
+    <string name="fetching_more_pokemon">Loading Pokemon…</string>
+    <string name="page_num">%1$s/%2$s</string>
+    <string name="sprites">Sprites</string>
+    <string name="ok">OK</string>
+    <string name="pokedex_num">Pokedex Num</string>
+    <string name="type">Type</string>
+    <string name="height">HEIGHT</string>
+    <string name="weight">WEIGHT</string>
     <string-array name="languages">
         <item>English</item>
         <item>German</item>

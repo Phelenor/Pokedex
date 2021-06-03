@@ -71,11 +71,13 @@ class PokemonListAdapter(
 
         fun bind(pokemon: Pokemon) {
             val pokemonBase = pokemon.idClass
+            val preferences = binding.root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
             binding.apply {
                 pokemonImage.load(pokemonBase.getSprite()) {
                     placeholder(R.drawable.pokemon_placeholder)
                     error(R.drawable.pokemon_placeholder_error)
                 }
+
 
                 if (pokemonBase.isFavorite) {
                     favoriteButton.setImageDrawable(
@@ -93,7 +95,7 @@ class PokemonListAdapter(
                     )
                 }
 
-                val langId = root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE).getInt(LANGUAGE_KEY, 0)
+                val langId = preferences.getInt(LANGUAGE_KEY, 0)
 
                 for (name in pokemon.specieClass.names) {
                     if (name.language.url.extractLangId() == langId) {

@@ -75,7 +75,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun setupSpinner() {
+    private fun setupSpinners() {
         val currentLanguage =
             preferences.getString(LANGUAGE_NAME, "")
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, languages)
@@ -107,7 +107,7 @@ class SettingsFragment : Fragment() {
                 val native = it.nameNative
                 it.nameEnglish ?: native!!
             }.sorted()
-            setupSpinner()
+            setupSpinners()
         }
     }
 

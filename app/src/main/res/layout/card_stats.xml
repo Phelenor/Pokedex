@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="228dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="4dp"
+    android:background="@color/surface_1"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/Headline2DarkCenter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/stats"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/BodyDarkLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/hp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <TextView
+            android:id="@+id/textView4"
+            style="@style/BodyDarkLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/attack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/BodyDarkLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/defense"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+        <TextView
+            android:id="@+id/textView5"
+            style="@style/BodyDarkLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/sp_atk"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+        <TextView
+            android:id="@+id/textView6"
+            style="@style/BodyDarkLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/sp_def"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <TextView
+            android:id="@+id/textView7"
+            style="@style/BodyDarkLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/speed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+        <TextView
+            android:id="@+id/textView8"
+            style="@style/BodyColdGrayLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+        <TextView
+            android:id="@+id/stat_hp"
+            style="@style/Headline3DarkRight"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/stat_attack"
+            style="@style/Headline3DarkRight"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/stat_defense"
+            style="@style/Headline3DarkRight"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView3"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/stat_sp_atk"
+            style="@style/Headline3DarkRight"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/stat_sp_def"
+            style="@style/Headline3DarkRight"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView6"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/stat_speed"
+            style="@style/Headline3DarkRight"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView7"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/stat_total"
+            style="@style/Headline3ColdGrayRight"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView8"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.skydoves.progressview.ProgressView
+            android:id="@+id/progress_hp"
+            app:progressView_autoAnimate="true"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/stat_hp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/stat_hp"
+            app:layout_constraintTop_toTopOf="@+id/stat_hp"
+            app:progressView_animation="accelerateDecelerate"
+            app:progressView_colorBackground="@color/dark_alpha"
+            app:progressView_colorProgress="@color/flat_base_stats_01_hp"
+            app:progressView_max="255"
+            app:progressView_min="0"
+            app:progressView_radius="16dp" />
+
+        <com.skydoves.progressview.ProgressView
+            android:id="@+id/progress_attack"
+            app:progressView_autoAnimate="true"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/stat_attack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/stat_attack"
+            app:layout_constraintTop_toTopOf="@+id/stat_attack"
+            app:progressView_animation="accelerateDecelerate"
+            app:progressView_colorBackground="@color/dark_alpha"
+            app:progressView_colorProgress="@color/flat_base_stats_02_attack"
+            app:progressView_max="255"
+            app:progressView_min="0"
+            app:progressView_radius="16dp" />
+
+        <com.skydoves.progressview.ProgressView
+            android:id="@+id/progress_defense"
+            app:progressView_autoAnimate="true"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/stat_defense"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/stat_defense"
+            app:layout_constraintTop_toTopOf="@+id/stat_defense"
+            app:progressView_animation="accelerateDecelerate"
+            app:progressView_colorBackground="@color/dark_alpha"
+            app:progressView_colorProgress="@color/flat_base_stats_03_defense"
+            app:progressView_max="255"
+            app:progressView_min="0"
+            app:progressView_radius="16dp" />
+
+        <com.skydoves.progressview.ProgressView
+            android:id="@+id/progress_sp_atk"
+            app:progressView_autoAnimate="true"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/stat_sp_atk"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/stat_sp_atk"
+            app:layout_constraintTop_toTopOf="@+id/stat_sp_atk"
+            app:progressView_animation="accelerateDecelerate"
+            app:progressView_colorBackground="@color/dark_alpha"
+            app:progressView_colorProgress="@color/flat_base_stats_04_sp_atk"
+            app:progressView_max="255"
+            app:progressView_min="0"
+            app:progressView_radius="16dp" />
+
+        <com.skydoves.progressview.ProgressView
+            android:id="@+id/progress_sp_def"
+            app:progressView_autoAnimate="true"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/stat_sp_def"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/stat_sp_def"
+            app:layout_constraintTop_toTopOf="@+id/stat_sp_def"
+            app:progressView_animation="accelerateDecelerate"
+            app:progressView_colorBackground="@color/dark_alpha"
+            app:progressView_colorProgress="@color/flat_base_stats_05_sp_def"
+            app:progressView_max="255"
+            app:progressView_min="0"
+            app:progressView_radius="16dp" />
+
+        <com.skydoves.progressview.ProgressView
+            android:id="@+id/progress_speed"
+            app:progressView_autoAnimate="true"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/stat_speed"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/stat_speed"
+            app:layout_constraintTop_toTopOf="@+id/stat_speed"
+            app:progressView_animation="accelerateDecelerate"
+            app:progressView_colorBackground="@color/dark_alpha"
+            app:progressView_colorProgress="@color/flat_base_stats_05_sp_def"
+            app:progressView_max="255"
+            app:progressView_min="0"
+            app:progressView_radius="16dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>

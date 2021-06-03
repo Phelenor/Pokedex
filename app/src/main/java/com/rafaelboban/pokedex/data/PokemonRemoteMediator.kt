@@ -16,6 +16,7 @@ import com.rafaelboban.pokedex.utils.Constants.INITIALIZED
 import com.rafaelboban.pokedex.utils.Constants.NETWORK_PAGE_SIZE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_STARTING_PAGE_INDEX
+import com.rafaelboban.pokedex.utils.PAGE_FETCHING
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -53,6 +54,8 @@ class PokemonRemoteMediator(
                     ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
             }
         }
+
+        PAGE_FETCHING = page
 
         try {
 
