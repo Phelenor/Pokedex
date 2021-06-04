@@ -1,5 +1,6 @@
 package com.rafaelboban.pokedex.ui.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +9,10 @@ import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.model.Chain
 import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.TypeFull
 import com.rafaelboban.pokedex.utils.extractEvolutionId
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +22,19 @@ class PokemonViewModel @Inject constructor(
     val pokemonDao: PokemonDao
 ) : ViewModel() {
     val evolutions = MutableLiveData<List<List<Pair<Pokemon, Int>>>>()
+    val types = MutableLiveData<List<TypeFull>>()
+
+    init {
+        viewModelScope.launch {
+            types.value = pokemonDao.getTypes()
+        }
+    }
+
+    private val handler: CoroutineExceptionHandler by lazy {
+        CoroutineExceptionHandler { _, exception ->
+            Log.e("COROUTINE_EXCEPTION", "$exception")
+        }
+    }
 
     fun onFavoriteClick(pokemon: Pokemon) {
         viewModelScope.launch {
@@ -35,7 +51,7 @@ class PokemonViewModel @Inject constructor(
     }
 
     fun getEvolutionChain(pokemon: Pokemon) {
-        viewModelScope.launch {
+        viewModelScope.launch(handler) {
             val data =
                 apiService.getEvolutionChain(pokemon.specieClass.evolution_chain.url.extractEvolutionId())
             val extracted = extractEvolutions(data.chain, pokemon)

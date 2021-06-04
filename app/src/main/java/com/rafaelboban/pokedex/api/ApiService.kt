@@ -1,9 +1,6 @@
 package com.rafaelboban.pokedex.api
 
-import com.rafaelboban.pokedex.model.EvolutionChainInfo
-import com.rafaelboban.pokedex.model.PokemonInfo
-import com.rafaelboban.pokedex.model.PokemonPagedResponse
-import com.rafaelboban.pokedex.model.PokemonSpecie
+import com.rafaelboban.pokedex.model.*
 import com.rafaelboban.pokedex.model.lang.Language
 import com.rafaelboban.pokedex.model.lang.LanguageResponse
 import retrofit2.http.GET
@@ -18,6 +15,9 @@ interface ApiService {
 
     @GET("pokemon/{id}")
     suspend fun getPokemonInfo(@Path("id") id: Int): PokemonInfo
+
+    @GET("type/{id}")
+    suspend fun getTypeFull(@Path("id") id: Int): TypeFull
 
     @GET("pokemon-species/{id}")
     suspend fun getPokemonSpecieInfo(@Path("id") id: Int): PokemonSpecie

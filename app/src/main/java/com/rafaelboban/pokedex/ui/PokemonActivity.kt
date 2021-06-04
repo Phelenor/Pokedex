@@ -18,8 +18,8 @@ import coil.load
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.ActivityPokemonBinding
 import com.rafaelboban.pokedex.databinding.DialogPokemonBinding
-import com.rafaelboban.pokedex.model.EvolutionChainInfo
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.TypeFull
 import com.rafaelboban.pokedex.ui.adapters.EvolutionAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.PokemonViewModel
 import com.rafaelboban.pokedex.utils.Constants
@@ -32,14 +32,17 @@ import com.rafaelboban.pokedex.utils.getColor
 import com.rafaelboban.pokedex.utils.getSprite
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class PokemonActivity : AppCompatActivity() {
 
     private lateinit var pokemon: Pokemon
-    private lateinit var pokemonEvolutionChain: EvolutionChainInfo
+    private lateinit var types: List<TypeFull>
     private lateinit var binding: ActivityPokemonBinding
     private val viewModel by viewModels<PokemonViewModel>()
+
+    var langId by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +54,7 @@ class PokemonActivity : AppCompatActivity() {
         viewModel.getEvolutionChain(pokemon)
 
         val preferences = getSharedPreferences(Constants.PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
-        val langId = preferences.getInt(
+        langId = preferences.getInt(
             Constants.LANGUAGE_KEY,
             LANG_ENGLISH_ID
         )
@@ -103,48 +106,49 @@ class PokemonActivity : AppCompatActivity() {
 
         setupObservers()
         setupListeners()
-        displayTypes()
         displayAbilityGrid()
         displayStatsCard()
-        displayEvolutionChain()
-
 
         setContentView(binding.root)
     }
 
-    private fun displayEvolutionChain() {
+    private fun displayEvolutionChain(evolutionsList: List<List<Pair<Pokemon, Int>>>) {
+        val evolutionField = binding.evolutionField
+
+        val evolutions = evolutionsList.filter { evolution ->
+            evolution.size > 1
+        }
+
+        if (evolutions.isNotEmpty()) {
+            evolutionField.visibility = View.VISIBLE
+            binding.evolutionProgress.isVisible = false
+        } else {
+            evolutionField.visibility = View.GONE
+            binding.evolutionProgress.isVisible = false
+        }
+
+        for (evolution in evolutions) {
+            val recyclerView = RecyclerView(this)
+            val adapter = EvolutionAdapter(evolution, types)
+            recyclerView.setHasFixedSize(true)
+            recyclerView.layoutManager =
+                LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+            recyclerView.adapter = adapter
+
+            val scale = resources.displayMetrics.density
+            val dpAsPixels = (16 * scale + 0.5f).toInt()
+            recyclerView.setPadding(dpAsPixels, 0, dpAsPixels, 0)
+            recyclerView.clipToPadding = false
+            evolutionField.addView(recyclerView)
+        }
     }
 
     private fun setupObservers() {
-        viewModel.evolutions.observe(this) {
-            val evolutionField = binding.evolutionField
-
-            val evolutions = it.filter { evolution ->
-                evolution.size > 1
-            }
-
-            if (evolutions.isNotEmpty()) {
-                evolutionField.visibility = View.VISIBLE
-                binding.evolutionProgress.isVisible = false
-            }
-            else {
-                evolutionField.visibility = View.GONE
-                binding.evolutionProgress.isVisible = false
-            }
-
-            for (evolution in evolutions) {
-                val recyclerView = RecyclerView(this)
-                val adapter = EvolutionAdapter(evolution)
-                recyclerView.setHasFixedSize(true)
-                recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-                recyclerView.adapter = adapter
-
-                val scale = resources.displayMetrics.density
-                val dpAsPixels = (16 * scale + 0.5f).toInt()
-                recyclerView.setPadding(dpAsPixels, 0, dpAsPixels, 0)
-                recyclerView.clipToPadding = false
-                evolutionField.addView(recyclerView)
-            }
+        viewModel.evolutions.observe(this) { evolutions ->
+            if (types.isNotEmpty()) displayEvolutionChain(evolutions)
+        }
+        viewModel.types.observe(this) {
+            displayTypes(it)
         }
     }
 
@@ -200,21 +204,44 @@ class PokemonActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayTypes() {
-        val types = pokemon.infoClass.types
-
-        binding.typeFirst.text = types[0].type.name.capitalize()
-        binding.typeFirst.backgroundTintList =
-            ContextCompat.getColorStateList(this, types[0].type.getColor())
-        binding.typeFirst.isVisible = true
-
-        if (types.size > 1) {
-            binding.typeSecond.text = types[1].type.name.capitalize()
-            binding.typeSecond.backgroundTintList =
-                ContextCompat.getColorStateList(this, types[1].type.getColor())
-            binding.typeSecond.isVisible = true
+    private fun displayTypes(types: List<TypeFull>) {
+        // TODO("listeners")
+        this.types = types
+        val typesInfo = pokemon.infoClass.types
+        for (typeName in viewModel.types.value!!) {
+            if (typeName.name == typesInfo[0].type.name) {
+                for (name in typeName.names) {
+                    if (name.language.url.extractLangId() == langId) {
+                        binding.typeFirst.text = name.name.capitalize()
+                        binding.typeFirst.backgroundTintList =
+                            ContextCompat.getColorStateList(this, typesInfo[0].type.getColor())
+                        binding.typeFirst.isVisible = true
+                        break
+                    } else if (LANG_ENGLISH_ID == langId) {
+                        binding.typeFirst.text = name.name.capitalize()
+                        binding.typeFirst.backgroundTintList =
+                            ContextCompat.getColorStateList(this, typesInfo[0].type.getColor())
+                        binding.typeFirst.isVisible = true
+                    }
+                }
+            }
+            if (typesInfo.size > 1 && typeName.name == typesInfo[1].type.name) {
+                for (name in typeName.names) {
+                    if (name.language.url.extractLangId() == langId) {
+                        binding.typeSecond.text = name.name.capitalize()
+                        binding.typeSecond.backgroundTintList =
+                            ContextCompat.getColorStateList(this, typesInfo[1].type.getColor())
+                        binding.typeSecond.isVisible = true
+                        break
+                    } else if (LANG_ENGLISH_ID == langId) {
+                        binding.typeSecond.text = name.name.capitalize()
+                        binding.typeSecond.backgroundTintList =
+                            ContextCompat.getColorStateList(this, typesInfo[1].type.getColor())
+                        binding.typeSecond.isVisible = true
+                    }
+                }
+            }
         }
-
     }
 
     private fun setupListeners() {

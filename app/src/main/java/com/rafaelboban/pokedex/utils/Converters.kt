@@ -29,4 +29,13 @@ class Converters {
     @TypeConverter
     fun flavorJsonToList(value: String) = Gson().fromJson(value, Array<FlavorTextEntry>::class.java).toList()
 
+    @TypeConverter
+    fun moveJsonToList(value: String) = Gson().fromJson(value, Array<Move>::class.java).toList()
+
+    @TypeConverter
+    fun pokemonIdJsonToList(value: String) = Gson().fromJson(value, Array<PokemonId>::class.java).toList()
+
+    @TypeConverter
+    fun typeJsonToList(value: String) = Gson().fromJson(value, Array<Type>::class.java).toList()
+
 }

@@ -63,6 +63,7 @@ class SearchFragment : Fragment() {
         }
 
         viewModel.setupLanguages()
+        viewModel.fetchTypes()
 
         setupListeners()
         setupObservers()

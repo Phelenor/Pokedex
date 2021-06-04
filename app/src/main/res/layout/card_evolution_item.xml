@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_pokemon_evolution"
     android:layout_width="wrap_content"
+    android:layout_height="208dp"
     android:layout_marginTop="8dp"
-    android:paddingBottom="8dp"
-    android:layout_height="208dp">
+    android:paddingBottom="8dp">
 
     <ImageView
         android:id="@+id/next_arrow"
@@ -30,7 +30,6 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/evolution_card"
-        app:strokeWidth="1dp"
         android:layout_width="132dp"
         android:layout_height="200dp"
         android:layout_marginStart="10dp"
@@ -40,7 +39,8 @@
         app:cardElevation="0dp"
         app:layout_constraintStart_toEndOf="@+id/next_arrow"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginStart="0dp">
+        app:layout_goneMarginStart="0dp"
+        app:strokeWidth="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -81,7 +81,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/evolution_mark" />
 
-            <GridLayout
+            <TableLayout
+                android:id="@+id/type_table"
+                android:stretchColumns="*"
+                android:collapseColumns=""
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
                 android:layout_marginStart="8dp"
@@ -93,67 +96,72 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pokemon_name">
 
+                <TableRow>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/type_first"
-                    android:layout_width="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:visibility="gone">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/type_first_button"
-                        style="@style/DescriptionSurface1Center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="16dp"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/type_first"
+                        android:layout_width="match_parent"
                         android:layout_columnWeight="1"
-                        android:backgroundTint="@color/flat_pokemon_type_grass"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:minWidth="0dp"
-                        android:paddingStart="8dp"
-                        android:paddingTop="1dp"
-                        android:paddingEnd="8dp"
-                        android:text="Grass"
-                        android:textAllCaps="true"
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+                        android:layout_gravity="end"
+                        android:visibility="gone">
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/type_first_button"
+                            style="@style/DescriptionSurface1Center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="16dp"
+                            android:layout_columnWeight="1"
+                            android:backgroundTint="@color/flat_pokemon_type_grass"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:minWidth="0dp"
+                            android:paddingStart="4dp"
+                            android:paddingTop="1dp"
+                            android:paddingEnd="4dp"
+                            android:text="Normal"
+                            android:textAllCaps="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/type_second"
-                    android:layout_width="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:visibility="gone">
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/type_second_button"
-                        style="@style/DescriptionSurface1Center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="16dp"
-                        android:backgroundTint="@color/flat_pokemon_type_fire"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp"
-                        android:minWidth="0dp"
-                        android:paddingStart="8dp"
-                        android:paddingTop="1dp"
-                        android:paddingEnd="8dp"
-                        android:text="FIRE"
-                        android:textAllCaps="true"
-                        android:visibility="visible"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/type_second"
+                        android:layout_width="match_parent"
+                        android:layout_columnWeight="1"
+                        android:visibility="gone">
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.google.android.material.button.MaterialButton
+                            android:gravity="start"
+                            android:id="@+id/type_second_button"
+                            style="@style/DescriptionSurface1Center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="16dp"
+                            android:backgroundTint="@color/flat_pokemon_type_fire"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:minWidth="0dp"
+                            android:paddingStart="4dp"
+                            android:paddingTop="1dp"
+                            android:paddingEnd="4dp"
+                            android:text="FLYING"
+                            android:textAllCaps="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
 
-            </GridLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </TableRow>
+
+
+            </TableLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

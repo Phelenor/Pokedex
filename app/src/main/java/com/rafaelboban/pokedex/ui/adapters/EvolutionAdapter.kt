@@ -10,12 +10,13 @@ import coil.load
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.CardEvolutionItemBinding
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.TypeFull
 import com.rafaelboban.pokedex.utils.Constants
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.getColor
 import com.rafaelboban.pokedex.utils.getSprite
 
-class EvolutionAdapter(val evolutions: List<Pair<Pokemon, Int>>) :
+class EvolutionAdapter(val evolutions: List<Pair<Pokemon, Int>>, val types: List<TypeFull>):
     RecyclerView.Adapter<EvolutionAdapter.EvolutionViewHolder>() {
 
     inner class EvolutionViewHolder(val binding: CardEvolutionItemBinding) :
@@ -59,18 +60,42 @@ class EvolutionAdapter(val evolutions: List<Pair<Pokemon, Int>>) :
                 }
             }
 
-            val types = evolution.first.infoClass.types
+            val typesInfo = evolution.first.infoClass.types
+            for (typeName in types) {
+                if (typeName.name == typesInfo[0].type.name) {
+                    for (name in typeName.names) {
+                        if (name.language.url.extractLangId() == langId) {
+                            typeFirstButton.text = name.name.capitalize()
+                            typeFirstButton.backgroundTintList =
+                                ContextCompat.getColorStateList(root.context, typesInfo[0].type.getColor())
+                            typeFirst.isVisible = true
+                            break
+                        } else if (Constants.LANG_ENGLISH_ID == langId) {
+                            typeFirstButton.text = name.name.capitalize()
+                            typeFirstButton.backgroundTintList =
+                                ContextCompat.getColorStateList(root.context, typesInfo[0].type.getColor())
+                            typeFirst.isVisible = true
+                        }
+                    }
+                }
+                if (typesInfo.size > 1 && typeName.name == typesInfo[1].type.name) {
+                    for (name in typeName.names) {
+                        if (name.language.url.extractLangId() == langId) {
+                            typeSecondButton.text = name.name.capitalize()
+                            typeSecondButton.backgroundTintList =
+                                ContextCompat.getColorStateList(root.context, typesInfo[1].type.getColor())
+                            typeSecond.isVisible = true
+                            break
+                        } else if (Constants.LANG_ENGLISH_ID == langId) {
+                            typeSecondButton.text = name.name.capitalize()
+                            typeSecondButton.backgroundTintList =
+                                ContextCompat.getColorStateList(root.context, typesInfo[1].type.getColor())
+                            typeSecond.isVisible = true
+                        }
+                    }
+                }
 
-            typeFirstButton.text = types[0].type.name.capitalize()
-            typeFirstButton.backgroundTintList =
-                ContextCompat.getColorStateList(root.context, types[0].type.getColor())
-            typeFirst.isVisible = true
-
-            if (types.size > 1) {
-                typeSecondButton.text = types[1].type.name.capitalize()
-                typeSecondButton.backgroundTintList =
-                    ContextCompat.getColorStateList(root.context, types[1].type.getColor())
-                typeSecond.isVisible = true
+                if (typesInfo.size <= 1) typeTable.setColumnCollapsed(1, true)
             }
 
             if (evolution.second == 0) levelNum.isVisible = false

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.TypeFull
 import com.rafaelboban.pokedex.model.lang.LanguageId
 
 @Dao
@@ -24,6 +25,10 @@ interface PokemonDao {
     @Query("DELETE FROM favorites")
     suspend fun clearFavorites()
 
+    @Query("UPDATE pokemon SET isFavorite = 0")
+    suspend fun deleteFavoriteStatus()
+
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPokemon(pokemon: List<Pokemon>)
 
@@ -36,8 +41,6 @@ interface PokemonDao {
     @Query("UPDATE pokemon SET isFavorite = :favorite WHERE `master-id` = :id")
     suspend fun updatePokemon(id: Int, favorite: Int)
 
-    @Query("UPDATE pokemon SET isFavorite = 0")
-    suspend fun deleteFavoriteStatus()
 
 
     @Query("SELECT * FROM languages")
@@ -45,5 +48,12 @@ interface PokemonDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLanguages(languages: List<LanguageId>)
+
+
+    @Query("SELECT * FROM types")
+    suspend fun getTypes(): List<TypeFull>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTypes(types: List<TypeFull>)
 
 }

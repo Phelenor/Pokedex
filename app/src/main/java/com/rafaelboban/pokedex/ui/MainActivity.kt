@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // viewModel.fetchTypesAndAbilities()
         setupDefaultSettings()
 
         binding = ActivityMainBinding.inflate(layoutInflater)

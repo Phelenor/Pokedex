@@ -42,7 +42,6 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-
     val pokemon = currentQuery.switchMap { query ->
 
         getPagedData()
@@ -176,6 +175,20 @@ class SearchViewModel @Inject constructor(
 
                 languages.removeAll(toBeRemoved)
                 pokemonDao.insertLanguages(languages)
+            }
+        }
+    }
+
+    fun fetchTypes() {
+        viewModelScope.launch {
+            if (pokemonDao.getTypes().isEmpty()) {
+                val types = (1..18).map {
+                    async {
+                        apiService.getTypeFull(it)
+                    }
+                }.awaitAll()
+                Log.d("TYPES", types.map {it.pokemon }.toString())
+                pokemonDao.insertTypes(types)
             }
         }
     }
