@@ -43,7 +43,9 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
-        preferences = activity?.getSharedPreferences(Constants.PREFERENCES_DEFAULT, Context.MODE_PRIVATE)!!
+
+        preferences =
+            activity?.getSharedPreferences(Constants.PREFERENCES_DEFAULT, Context.MODE_PRIVATE)!!
 
         setupObservers()
         setupListeners()

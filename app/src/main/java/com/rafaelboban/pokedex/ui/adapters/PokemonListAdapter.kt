@@ -65,13 +65,13 @@ class PokemonListAdapter(
         }
     }
 
-
     inner class PokemonViewHolder(private val binding: CardPokemonItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(pokemon: Pokemon) {
             val pokemonBase = pokemon.idClass
-            val preferences = binding.root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
+            val preferences =
+                binding.root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
             binding.apply {
                 pokemonImage.load(pokemonBase.getSprite()) {
                     placeholder(R.drawable.pokemon_placeholder)

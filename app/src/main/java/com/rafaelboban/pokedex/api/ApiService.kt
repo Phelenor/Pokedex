@@ -30,4 +30,10 @@ interface ApiService {
 
     @GET("language")
     suspend fun getLanguages(): LanguageResponse
+
+    @GET("pokemon/{name}")
+    suspend fun getPokemonByName(@Path("name") name: String): PokemonInfo
+
+    @GET("pokemon-species/{name}")
+    suspend fun getPokemonSpecieByName(@Path("name") name: String): PokemonSpecie
 }

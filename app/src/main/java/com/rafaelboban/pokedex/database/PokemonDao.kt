@@ -42,7 +42,6 @@ interface PokemonDao {
     suspend fun updatePokemon(id: Int, favorite: Int)
 
 
-
     @Query("SELECT * FROM languages")
     suspend fun getLanguages(): List<LanguageId>
 

@@ -16,7 +16,10 @@ import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.getColor
 import com.rafaelboban.pokedex.utils.getSprite
 
-class EvolutionAdapter(val evolutions: List<Pair<Pokemon, Int>>, val types: List<TypeFull>):
+class EvolutionAdapter(
+    private val evolutions: List<Pair<Pokemon, Int>>,
+    private val types: List<TypeFull>
+) :
     RecyclerView.Adapter<EvolutionAdapter.EvolutionViewHolder>() {
 
     inner class EvolutionViewHolder(val binding: CardEvolutionItemBinding) :
@@ -33,10 +36,14 @@ class EvolutionAdapter(val evolutions: List<Pair<Pokemon, Int>>, val types: List
 
     override fun onBindViewHolder(holder: EvolutionAdapter.EvolutionViewHolder, position: Int) {
         val evolution = evolutions[position]
-        val preferences = holder.binding.root.context.getSharedPreferences(Constants.PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
+        val preferences = holder.binding.root.context.getSharedPreferences(
+            Constants.PREFERENCES_DEFAULT,
+            Context.MODE_PRIVATE
+        )
 
         if (position == 0) {
-            holder.binding.evolutionMark.text = holder.binding.root.context.getString(R.string.unevolved)
+            holder.binding.evolutionMark.text =
+                holder.binding.root.context.getString(R.string.unevolved)
             holder.binding.nextArrow.isVisible = false
             holder.binding.levelNum.isVisible = false
             holder.binding.evolutionCard.strokeColor =
@@ -44,7 +51,7 @@ class EvolutionAdapter(val evolutions: List<Pair<Pokemon, Int>>, val types: List
         }
 
         holder.binding.apply {
-            pokemonImage.load(evolution.first.idClass.getSprite()) {
+            pokemonImage.load(evolution.first.getSprite()) {
                 placeholder(R.drawable.pokemon_placeholder)
                 error(R.drawable.pokemon_placeholder_error)
             }
@@ -67,13 +74,19 @@ class EvolutionAdapter(val evolutions: List<Pair<Pokemon, Int>>, val types: List
                         if (name.language.url.extractLangId() == langId) {
                             typeFirstButton.text = name.name.capitalize()
                             typeFirstButton.backgroundTintList =
-                                ContextCompat.getColorStateList(root.context, typesInfo[0].type.getColor())
+                                ContextCompat.getColorStateList(
+                                    root.context,
+                                    typesInfo[0].type.getColor()
+                                )
                             typeFirst.isVisible = true
                             break
                         } else if (Constants.LANG_ENGLISH_ID == langId) {
                             typeFirstButton.text = name.name.capitalize()
                             typeFirstButton.backgroundTintList =
-                                ContextCompat.getColorStateList(root.context, typesInfo[0].type.getColor())
+                                ContextCompat.getColorStateList(
+                                    root.context,
+                                    typesInfo[0].type.getColor()
+                                )
                             typeFirst.isVisible = true
                         }
                     }
@@ -83,13 +96,19 @@ class EvolutionAdapter(val evolutions: List<Pair<Pokemon, Int>>, val types: List
                         if (name.language.url.extractLangId() == langId) {
                             typeSecondButton.text = name.name.capitalize()
                             typeSecondButton.backgroundTintList =
-                                ContextCompat.getColorStateList(root.context, typesInfo[1].type.getColor())
+                                ContextCompat.getColorStateList(
+                                    root.context,
+                                    typesInfo[1].type.getColor()
+                                )
                             typeSecond.isVisible = true
                             break
                         } else if (Constants.LANG_ENGLISH_ID == langId) {
                             typeSecondButton.text = name.name.capitalize()
                             typeSecondButton.backgroundTintList =
-                                ContextCompat.getColorStateList(root.context, typesInfo[1].type.getColor())
+                                ContextCompat.getColorStateList(
+                                    root.context,
+                                    typesInfo[1].type.getColor()
+                                )
                             typeSecond.isVisible = true
                         }
                     }
@@ -99,7 +118,8 @@ class EvolutionAdapter(val evolutions: List<Pair<Pokemon, Int>>, val types: List
             }
 
             if (evolution.second == 0) levelNum.isVisible = false
-            else levelNum.text = root.context.getString(R.string.level_format, evolution.second.toString())
+            else levelNum.text =
+                root.context.getString(R.string.level_format, evolution.second.toString())
 
             when (position) {
                 1 -> evolutionMark.text = root.context.getString(R.string.first_evolution)

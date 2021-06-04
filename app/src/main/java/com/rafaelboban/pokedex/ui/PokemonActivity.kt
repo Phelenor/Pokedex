@@ -1,6 +1,7 @@
 package com.rafaelboban.pokedex.ui
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
@@ -205,7 +206,6 @@ class PokemonActivity : AppCompatActivity() {
     }
 
     private fun displayTypes(types: List<TypeFull>) {
-        // TODO("listeners")
         this.types = types
         val typesInfo = pokemon.infoClass.types
         for (typeName in viewModel.types.value!!) {
@@ -241,6 +241,20 @@ class PokemonActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        binding.typeFirst.setOnClickListener {
+            val intent = Intent(this, TypeActivity::class.java).apply {
+                // putExtra(Constants.EXTRA_TYPE, pokemon)
+            }
+            startActivity(intent)
+        }
+
+        binding.typeSecond.setOnClickListener {
+            val intent = Intent(this, TypeActivity::class.java).apply {
+                // putExtra(Constants.EXTRA_TYPE, pokemon)
+            }
+            startActivity(intent)
         }
     }
 

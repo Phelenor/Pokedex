@@ -6,13 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rafaelboban.pokedex.api.ApiService
 import com.rafaelboban.pokedex.database.PokemonDao
-import com.rafaelboban.pokedex.model.Chain
-import com.rafaelboban.pokedex.model.Favorite
-import com.rafaelboban.pokedex.model.Pokemon
-import com.rafaelboban.pokedex.model.TypeFull
+import com.rafaelboban.pokedex.model.*
 import com.rafaelboban.pokedex.utils.extractEvolutionId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +19,7 @@ class PokemonViewModel @Inject constructor(
     private val apiService: ApiService,
     val pokemonDao: PokemonDao
 ) : ViewModel() {
+
     val evolutions = MutableLiveData<List<List<Pair<Pokemon, Int>>>>()
     val types = MutableLiveData<List<TypeFull>>()
 
@@ -41,7 +40,6 @@ class PokemonViewModel @Inject constructor(
             if (pokemon.idClass.isFavorite) {
                 pokemon.idClass.isFavorite = false
                 pokemonDao.deleteFavorite(pokemon.idClass.name)
-
             } else {
                 pokemon.idClass.isFavorite = true
                 pokemonDao.insertFavorite(Favorite(pokemon = pokemon))
@@ -57,7 +55,25 @@ class PokemonViewModel @Inject constructor(
             val extracted = extractEvolutions(data.chain, pokemon)
             evolutions.value = extracted.map {
                 it.map { pair ->
-                    Pair(pokemonDao.getSinglePokemon(pair.first), pair.second)
+                    var pokemonEvolved = pokemonDao.getSinglePokemon(pair.first)
+
+                    val specieFetch = async {
+                        apiService.getPokemonSpecieByName(pair.first)
+                    }
+
+                    val infoFetch = async {
+                        apiService.getPokemonByName(pair.first)
+                    }
+
+                    if (pokemonEvolved == null) {
+                        pokemonEvolved = Pokemon(
+                            0,
+                            PokemonId("", ""),
+                            specieFetch.await(),
+                            infoFetch.await()
+                        )
+                    }
+                    Pair(pokemonEvolved, pair.second)
                 }
             }
         }

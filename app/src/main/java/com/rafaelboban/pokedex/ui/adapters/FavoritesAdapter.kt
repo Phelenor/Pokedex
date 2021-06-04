@@ -40,7 +40,11 @@ class FavoritesAdapter(
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: FavoritesViewHolder, position: Int) {
         val favorite = favorites[position]
-        val preferences = holder.binding.root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
+        val preferences = holder.binding.root.context.getSharedPreferences(
+            PREFERENCES_DEFAULT,
+            Context.MODE_PRIVATE
+        )
+
         holder.binding.apply {
             pokemonImage.load(favorite.pokemon.idClass.getSprite()) {
                 placeholder(R.drawable.pokemon_placeholder)
@@ -55,6 +59,7 @@ class FavoritesAdapter(
                     )
                 )
             }
+
             val langId = preferences.getInt(LANGUAGE_KEY, 0)
 
             for (name in favorite.pokemon.specieClass.names) {

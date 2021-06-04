@@ -158,7 +158,7 @@ class FavoritesFragment : Fragment() {
         }
     }
 
-    fun startDragging(viewHolder: RecyclerView.ViewHolder) {
+    private fun startDragging(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
     }
 }

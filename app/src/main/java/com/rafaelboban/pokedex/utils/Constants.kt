@@ -15,6 +15,7 @@ object Constants {
     const val POKEAPI_BASE_URL = "https://pokeapi.co/api/v2/"
     const val NETWORK_PAGE_SIZE = 20
     const val EXTRA_POKEMON = "Pokemon"
+    const val EXTRA_TYPE = "Type"
     const val KG_TO_LBS = 2.20462262
     const val METER_TO_IN = 39.3700787
 }

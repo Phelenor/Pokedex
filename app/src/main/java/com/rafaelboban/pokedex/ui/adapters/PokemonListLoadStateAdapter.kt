@@ -23,6 +23,7 @@ class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
         val binding = PokemonItemLoadStateBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
+
         this.parent = parent
         return LoadStateViewHolder(binding)
     }
@@ -74,7 +75,6 @@ class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
                     binding.loadCard.strokeColor =
                         parent!!.resources.getColor(R.color.tint_secondary)
                 }
-
             }
         }
     }

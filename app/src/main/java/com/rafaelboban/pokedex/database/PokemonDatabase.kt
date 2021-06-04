@@ -10,7 +10,11 @@ import com.rafaelboban.pokedex.model.TypeFull
 import com.rafaelboban.pokedex.model.lang.LanguageId
 import com.rafaelboban.pokedex.utils.Converters
 
-@Database(entities = [Pokemon::class, Favorite::class, LanguageId::class, RemoteKeys::class, TypeFull::class], version = 1, exportSchema = false)
+@Database(
+    entities = [Pokemon::class, Favorite::class, LanguageId::class, RemoteKeys::class, TypeFull::class],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(Converters::class)
 abstract class PokemonDatabase : RoomDatabase() {
 

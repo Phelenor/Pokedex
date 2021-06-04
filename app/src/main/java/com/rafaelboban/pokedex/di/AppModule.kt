@@ -26,8 +26,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit() : Retrofit {
-        val logging = HttpLoggingInterceptor().also { it.setLevel(HttpLoggingInterceptor.Level.BASIC) }
+    fun provideRetrofit(): Retrofit {
+        val logging =
+            HttpLoggingInterceptor().also { it.setLevel(HttpLoggingInterceptor.Level.BASIC) }
         val client = OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
@@ -38,6 +39,7 @@ object AppModule {
             .client(client)
             .build()
     }
+
     @Provides
     fun provideApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)

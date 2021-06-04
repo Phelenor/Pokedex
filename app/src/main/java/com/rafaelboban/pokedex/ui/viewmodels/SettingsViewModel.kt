@@ -3,7 +3,6 @@ package com.rafaelboban.pokedex.ui.viewmodels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rafaelboban.pokedex.api.ApiService
 import com.rafaelboban.pokedex.database.PokemonDao
 import com.rafaelboban.pokedex.model.lang.LanguageId
 import dagger.hilt.android.lifecycle.HiltViewModel
