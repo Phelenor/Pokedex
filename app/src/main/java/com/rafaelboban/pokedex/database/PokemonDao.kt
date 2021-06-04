@@ -30,6 +30,9 @@ interface PokemonDao {
     @Query("SELECT * FROM pokemon")
     fun getPokemon(): PagingSource<Int, Pokemon>
 
+    @Query("SELECT * FROM pokemon WHERE `pokemon-name` = :name")
+    suspend fun getSinglePokemon(name: String): Pokemon
+
     @Query("UPDATE pokemon SET isFavorite = :favorite WHERE `master-id` = :id")
     suspend fun updatePokemon(id: Int, favorite: Int)
 

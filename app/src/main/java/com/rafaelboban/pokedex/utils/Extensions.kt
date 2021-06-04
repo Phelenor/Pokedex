@@ -15,6 +15,9 @@ fun String.extractLangId(): Int =
 fun String.extractGeneration(): Int =
     this.substringAfter("generation").replace("/", "").toInt()
 
+fun String.extractEvolutionId(): Int =
+    this.substringAfter("evolution-chain").replace("/", "").toInt()
+
 fun PokemonId.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.pokemonId}.png"
 
 fun Int.toRoman() =

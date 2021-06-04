@@ -87,11 +87,11 @@
 
                 <ImageView
                     android:id="@+id/pokemon_icon"
-                    android:scaleType="centerCrop"
                     android:layout_width="144dp"
                     android:layout_height="144dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="24dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/pokemon_placeholder"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -136,7 +136,6 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/type_first"
-                    android:visibility="gone"
                     style="@style/Headline3Surface1Left"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
@@ -149,13 +148,13 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textAllCaps="false"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/type_info"
                     app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/type_second"
-                    android:visibility="gone"
                     style="@style/Headline3Surface1Left"
                     android:layout_width="wrap_content"
                     android:layout_height="32dp"
@@ -167,6 +166,7 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textAllCaps="false"
+                    android:visibility="gone"
                     app:cornerRadius="36dp"
                     app:layout_constraintBaseline_toBaselineOf="@+id/type_first"
                     app:layout_constraintStart_toEndOf="@+id/type_first"
@@ -286,9 +286,7 @@
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
                     </GridLayout>
-
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
@@ -334,6 +332,39 @@
                 android:id="@+id/stats_card"
                 layout="@layout/card_stats" />
 
+            <LinearLayout
+                android:id="@+id/evolution_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="48dp"
+                android:background="@color/surface_1"
+                android:elevation="4dp"
+                android:orientation="vertical"
+                android:paddingBottom="8dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/evolution_title"
+                    style="@style/Headline2DarkCenter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:text="@string/evolution"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/evolution_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:indeterminateTint="@color/tint_secondary" />
 
         </LinearLayout>
 

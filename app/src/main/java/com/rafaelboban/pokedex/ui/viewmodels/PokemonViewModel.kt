@@ -1,17 +1,24 @@
 package com.rafaelboban.pokedex.ui.viewmodels
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rafaelboban.pokedex.api.ApiService
 import com.rafaelboban.pokedex.database.PokemonDao
+import com.rafaelboban.pokedex.model.Chain
 import com.rafaelboban.pokedex.model.Favorite
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.utils.extractEvolutionId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PokemonViewModel @Inject constructor(private val pokemonDao: PokemonDao) : ViewModel() {
-
+class PokemonViewModel @Inject constructor(
+    private val apiService: ApiService,
+    val pokemonDao: PokemonDao
+) : ViewModel() {
+    val evolutions = MutableLiveData<List<List<Pair<Pokemon, Int>>>>()
 
     fun onFavoriteClick(pokemon: Pokemon) {
         viewModelScope.launch {
@@ -25,5 +32,67 @@ class PokemonViewModel @Inject constructor(private val pokemonDao: PokemonDao) :
             }
             pokemonDao.updatePokemon(pokemon.id, (if (pokemon.idClass.isFavorite) 1 else 0))
         }
+    }
+
+    fun getEvolutionChain(pokemon: Pokemon) {
+        viewModelScope.launch {
+            val data =
+                apiService.getEvolutionChain(pokemon.specieClass.evolution_chain.url.extractEvolutionId())
+            val extracted = extractEvolutions(data.chain, pokemon)
+            evolutions.value = extracted.map {
+                it.map { pair ->
+                    Pair(pokemonDao.getSinglePokemon(pair.first), pair.second)
+                }
+            }
+        }
+    }
+
+    private fun extractEvolutions(
+        chain: Chain,
+        pokemon: Pokemon
+    ): MutableList<MutableList<Pair<String, Int>>> {
+        var mainChain: Chain = chain
+
+        if (chain.species.name == pokemon.idClass.name) {
+            mainChain = chain
+        } else {
+            outer@ for (evolutionChain in chain.evolves_to) {
+                if (evolutionChain.species.name == pokemon.idClass.name) {
+                    mainChain = evolutionChain
+                    break
+                } else {
+                    for (evolutionChainInner in evolutionChain.evolves_to) {
+                        if (evolutionChainInner.species.name == pokemon.idClass.name) {
+                            mainChain = evolutionChainInner
+                            break@outer
+                        }
+                    }
+                }
+            }
+        }
+
+        return findAllChains(mainChain, mutableListOf(), mutableListOf())
+    }
+
+    private fun findAllChains(
+        chain: Chain,
+        list: MutableList<Pair<String, Int>>,
+        master: MutableList<MutableList<Pair<String, Int>>>
+    ): MutableList<MutableList<Pair<String, Int>>> {
+        val local = list.toMutableList()
+        if (chain.evolution_details.isNotEmpty()) {
+            local.add(Pair(chain.species.name, chain.evolution_details[0].min_level))
+        } else {
+            local.add(Pair(chain.species.name, 0))
+        }
+
+        if (chain.evolves_to.isEmpty()) {
+            master.add(local)
+        } else {
+            for (evolution in chain.evolves_to) {
+                findAllChains(evolution, local, master)
+            }
+        }
+        return master
     }
 }

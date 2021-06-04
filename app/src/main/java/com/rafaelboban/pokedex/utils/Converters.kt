@@ -28,4 +28,5 @@ class Converters {
 
     @TypeConverter
     fun flavorJsonToList(value: String) = Gson().fromJson(value, Array<FlavorTextEntry>::class.java).toList()
+
 }

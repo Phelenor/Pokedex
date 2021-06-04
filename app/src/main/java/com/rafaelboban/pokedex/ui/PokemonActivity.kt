@@ -5,17 +5,22 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.ActivityPokemonBinding
 import com.rafaelboban.pokedex.databinding.DialogPokemonBinding
+import com.rafaelboban.pokedex.model.EvolutionChainInfo
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.ui.adapters.EvolutionAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.PokemonViewModel
 import com.rafaelboban.pokedex.utils.Constants
 import com.rafaelboban.pokedex.utils.Constants.EXTRA_POKEMON
@@ -32,7 +37,7 @@ import kotlin.math.roundToInt
 class PokemonActivity : AppCompatActivity() {
 
     private lateinit var pokemon: Pokemon
-
+    private lateinit var pokemonEvolutionChain: EvolutionChainInfo
     private lateinit var binding: ActivityPokemonBinding
     private val viewModel by viewModels<PokemonViewModel>()
 
@@ -43,12 +48,13 @@ class PokemonActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         pokemon = intent.getSerializableExtra(EXTRA_POKEMON) as Pokemon
+        viewModel.getEvolutionChain(pokemon)
 
         val preferences = getSharedPreferences(Constants.PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
         val langId = preferences.getInt(
-                Constants.LANGUAGE_KEY,
-                LANG_ENGLISH_ID
-            )
+            Constants.LANGUAGE_KEY,
+            LANG_ENGLISH_ID
+        )
 
 
         for (name in pokemon.specieClass.names) {
@@ -90,18 +96,58 @@ class PokemonActivity : AppCompatActivity() {
         binding.height.text =
             getString(
                 R.string.height_format,
-                "%d".format((heightInches / 12).roundToInt()),
-                "%02d".format((heightInches % 12).roundToInt()),
+                "%d".format((heightInches.roundToInt() / 12)),
+                "%02d".format((heightInches.roundToInt() % 12)),
                 "%.1f".format(heightM)
             )
 
+        setupObservers()
+        setupListeners()
         displayTypes()
         displayAbilityGrid()
         displayStatsCard()
-        setupListeners()
+        displayEvolutionChain()
+
 
         setContentView(binding.root)
     }
+
+    private fun displayEvolutionChain() {
+    }
+
+    private fun setupObservers() {
+        viewModel.evolutions.observe(this) {
+            val evolutionField = binding.evolutionField
+
+            val evolutions = it.filter { evolution ->
+                evolution.size > 1
+            }
+
+            if (evolutions.isNotEmpty()) {
+                evolutionField.visibility = View.VISIBLE
+                binding.evolutionProgress.isVisible = false
+            }
+            else {
+                evolutionField.visibility = View.GONE
+                binding.evolutionProgress.isVisible = false
+            }
+
+            for (evolution in evolutions) {
+                val recyclerView = RecyclerView(this)
+                val adapter = EvolutionAdapter(evolution)
+                recyclerView.setHasFixedSize(true)
+                recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+                recyclerView.adapter = adapter
+
+                val scale = resources.displayMetrics.density
+                val dpAsPixels = (16 * scale + 0.5f).toInt()
+                recyclerView.setPadding(dpAsPixels, 0, dpAsPixels, 0)
+                recyclerView.clipToPadding = false
+                evolutionField.addView(recyclerView)
+            }
+        }
+    }
+
 
     private fun displayStatsCard() {
         val stats = pokemon.infoClass.stats
