@@ -14,6 +14,7 @@
         android:layout_marginStart="10dp"
         android:src="@drawable/ic_arrow_drop_down"
         android:visibility="visible"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -40,6 +41,7 @@
         app:layout_constraintStart_toEndOf="@+id/next_arrow"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginStart="0dp"
+        android:clickable="true"
         app:strokeWidth="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout

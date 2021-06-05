@@ -1,4 +1,4 @@
-package com.rafaelboban.pokedex.ui
+package com.rafaelboban.pokedex.ui.bottom_nav
 
 import android.content.Context
 import android.content.Intent
@@ -21,6 +21,7 @@ import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.DialogClearBinding
 import com.rafaelboban.pokedex.databinding.FragmentSettingsBinding
 import com.rafaelboban.pokedex.databinding.LayoutSnackbarBinding
+import com.rafaelboban.pokedex.ui.AboutActivity
 import com.rafaelboban.pokedex.ui.viewmodels.SettingsViewModel
 import com.rafaelboban.pokedex.utils.Constants
 import com.rafaelboban.pokedex.utils.Constants.LANGUAGE_KEY

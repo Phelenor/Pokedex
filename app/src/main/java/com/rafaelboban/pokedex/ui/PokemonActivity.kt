@@ -23,14 +23,12 @@ import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.TypeFull
 import com.rafaelboban.pokedex.ui.adapters.EvolutionAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.PokemonViewModel
-import com.rafaelboban.pokedex.utils.Constants
+import com.rafaelboban.pokedex.utils.*
 import com.rafaelboban.pokedex.utils.Constants.EXTRA_POKEMON
+import com.rafaelboban.pokedex.utils.Constants.EXTRA_TYPE
 import com.rafaelboban.pokedex.utils.Constants.KG_TO_LBS
 import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_ID
 import com.rafaelboban.pokedex.utils.Constants.METER_TO_IN
-import com.rafaelboban.pokedex.utils.extractLangId
-import com.rafaelboban.pokedex.utils.getColor
-import com.rafaelboban.pokedex.utils.getSprite
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
@@ -65,7 +63,7 @@ class PokemonActivity : AppCompatActivity() {
             if (name.language.url.extractLangId() == langId) {
                 binding.collapsingToolbar.title = name.name.capitalize()
                 break
-            } else if (LANG_ENGLISH_ID == langId) {
+            } else if (LANG_ENGLISH_ID == name.language.url.extractLangId()) {
                 binding.collapsingToolbar.title = name.name.capitalize()
             }
         }
@@ -83,12 +81,12 @@ class PokemonActivity : AppCompatActivity() {
             )
         }
 
-        binding.pokemonIcon.load(pokemon.idClass.getSprite()) {
+        binding.pokemonIcon.load(pokemon.getSprite()) {
             placeholder(R.drawable.pokemon_placeholder)
             error(R.drawable.pokemon_placeholder_error)
         }
 
-        binding.pokedexNum.text = "%03d".format(pokemon.id)
+        binding.pokedexNum.text = "%03d".format(pokemon.infoClass.id)
 
         val weightKg = pokemon.infoClass.weight * 0.1
         val weightLbs = KG_TO_LBS * weightKg
@@ -130,7 +128,27 @@ class PokemonActivity : AppCompatActivity() {
 
         for (evolution in evolutions) {
             val recyclerView = RecyclerView(this)
-            val adapter = EvolutionAdapter(evolution, types)
+            val adapter = EvolutionAdapter(
+                evolution,
+                types,
+                onNextClick = { position ->
+                    recyclerView.scrollToPosition(position)
+                },
+                onPokemonClick = { pokemon ->
+                    ACTIVITY_STARTED_ID = pokemon.id
+                    val intent = Intent(this, PokemonActivity::class.java).apply {
+                        putExtra(EXTRA_POKEMON, pokemon)
+                    }
+                    startActivity(intent)
+                },
+                onTypeClick = { type ->
+                    ACTIVITY_STARTED_ID = pokemon.id
+                    val intent = Intent(this, TypeActivity::class.java).apply {
+                        putExtra(EXTRA_TYPE, type)
+                    }
+                    startActivity(intent)
+                }
+            )
             recyclerView.setHasFixedSize(true)
             recyclerView.layoutManager =
                 LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -208,16 +226,24 @@ class PokemonActivity : AppCompatActivity() {
     private fun displayTypes(types: List<TypeFull>) {
         this.types = types
         val typesInfo = pokemon.infoClass.types
-        for (typeName in viewModel.types.value!!) {
-            if (typeName.name == typesInfo[0].type.name) {
-                for (name in typeName.names) {
+        for (typeFull in viewModel.types.value!!) {
+            if (typeFull.name == typesInfo[0].type.name) {
+
+                binding.typeFirst.setOnClickListener {
+                    val intent = Intent(this, TypeActivity::class.java).apply {
+                        putExtra(Constants.EXTRA_TYPE, typeFull)
+                    }
+                    startActivity(intent)
+                }
+
+                for (name in typeFull.names) {
                     if (name.language.url.extractLangId() == langId) {
                         binding.typeFirst.text = name.name.capitalize()
                         binding.typeFirst.backgroundTintList =
                             ContextCompat.getColorStateList(this, typesInfo[0].type.getColor())
                         binding.typeFirst.isVisible = true
                         break
-                    } else if (LANG_ENGLISH_ID == langId) {
+                    } else if (LANG_ENGLISH_ID == name.language.url.extractLangId()) {
                         binding.typeFirst.text = name.name.capitalize()
                         binding.typeFirst.backgroundTintList =
                             ContextCompat.getColorStateList(this, typesInfo[0].type.getColor())
@@ -225,15 +251,23 @@ class PokemonActivity : AppCompatActivity() {
                     }
                 }
             }
-            if (typesInfo.size > 1 && typeName.name == typesInfo[1].type.name) {
-                for (name in typeName.names) {
+            if (typesInfo.size > 1 && typeFull.name == typesInfo[1].type.name) {
+
+                binding.typeSecond.setOnClickListener {
+                    val intent = Intent(this, TypeActivity::class.java).apply {
+                        putExtra(EXTRA_TYPE, typeFull)
+                    }
+                    startActivity(intent)
+                }
+
+                for (name in typeFull.names) {
                     if (name.language.url.extractLangId() == langId) {
                         binding.typeSecond.text = name.name.capitalize()
                         binding.typeSecond.backgroundTintList =
                             ContextCompat.getColorStateList(this, typesInfo[1].type.getColor())
                         binding.typeSecond.isVisible = true
                         break
-                    } else if (LANG_ENGLISH_ID == langId) {
+                    } else if (LANG_ENGLISH_ID == name.language.url.extractLangId()) {
                         binding.typeSecond.text = name.name.capitalize()
                         binding.typeSecond.backgroundTintList =
                             ContextCompat.getColorStateList(this, typesInfo[1].type.getColor())
@@ -241,20 +275,6 @@ class PokemonActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
-
-        binding.typeFirst.setOnClickListener {
-            val intent = Intent(this, TypeActivity::class.java).apply {
-                // putExtra(Constants.EXTRA_TYPE, pokemon)
-            }
-            startActivity(intent)
-        }
-
-        binding.typeSecond.setOnClickListener {
-            val intent = Intent(this, TypeActivity::class.java).apply {
-                // putExtra(Constants.EXTRA_TYPE, pokemon)
-            }
-            startActivity(intent)
         }
     }
 

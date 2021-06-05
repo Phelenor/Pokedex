@@ -1,4 +1,4 @@
-package com.rafaelboban.pokedex.ui
+package com.rafaelboban.pokedex.ui.bottom_nav
 
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -18,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.FragmentSearchBinding
 import com.rafaelboban.pokedex.databinding.LayoutSnackbarBinding
+import com.rafaelboban.pokedex.ui.PokemonActivity
 import com.rafaelboban.pokedex.ui.adapters.PokemonListAdapter
 import com.rafaelboban.pokedex.ui.adapters.PokemonListLoadStateAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.SearchViewModel

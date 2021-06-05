@@ -17,6 +17,7 @@ import com.rafaelboban.pokedex.utils.Constants.NETWORK_PAGE_SIZE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_STARTING_PAGE_INDEX
 import com.rafaelboban.pokedex.utils.PAGE_FETCHING
+import com.rafaelboban.pokedex.utils.extractPokemonId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -82,13 +83,13 @@ class PokemonRemoteMediator(
 
                 val fetchSpecieInfo = pokemonPaged.map { pokemonId ->
                     async(Dispatchers.IO) {
-                        apiService.getPokemonSpecieInfo(pokemonId.pokemonId)
+                        apiService.getPokemonSpecieInfo(pokemonId.url.extractPokemonId())
                     }
                 }
 
                 val fetchPokemonInfo = pokemonPaged.map { pokemonId ->
                     async(Dispatchers.IO) {
-                        apiService.getPokemonInfo(pokemonId.pokemonId)
+                        apiService.getPokemonInfo(pokemonId.url.extractPokemonId())
                     }
                 }
 
@@ -101,7 +102,7 @@ class PokemonRemoteMediator(
             for (i in pokemonPaged.indices) {
                 pokemon.add(
                     Pokemon(
-                        pokemonPaged[i].pokemonId,
+                        pokemonInfo[i].id,
                         pokemonPaged[i],
                         specieInfo[i],
                         pokemonInfo[i]

@@ -46,7 +46,7 @@ class FavoritesAdapter(
         )
 
         holder.binding.apply {
-            pokemonImage.load(favorite.pokemon.idClass.getSprite()) {
+            pokemonImage.load(favorite.pokemon.getSprite()) {
                 placeholder(R.drawable.pokemon_placeholder)
                 error(R.drawable.pokemon_placeholder_error)
             }
@@ -66,12 +66,12 @@ class FavoritesAdapter(
                 if (name.language.url.extractLangId() == langId) {
                     pokemonName.text = name.name.capitalize()
                     break
-                } else if (Constants.LANG_ENGLISH_ID == langId) {
+                } else if (Constants.LANG_ENGLISH_ID == name.language.url.extractLangId()) {
                     pokemonName.text = name.name.capitalize()
                 }
             }
 
-            pokemonId.text = "%03d".format(favorite.pokemon.id)
+            pokemonId.text = "%03d".format(favorite.pokemon.infoClass.id)
 
             pokemonCard.setOnClickListener {
                 if (!favoritesModeEdit) onPokemonClick(favorite.pokemon)

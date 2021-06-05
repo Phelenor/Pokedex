@@ -104,7 +104,7 @@ class SearchViewModel @Inject constructor(
         },
 
         { it.idClass.name.lowercase().startsWith(query.lowercase()) },
-        { query == it.idClass.pokemonId.toString().padStart(3, '0') },
+        { query == it.infoClass.id.toString().padStart(3, '0') },
         {
             query in it.infoClass.types.map { typeInfo ->
                 typeInfo.type.name
@@ -120,7 +120,7 @@ class SearchViewModel @Inject constructor(
                 val start = range[0].toInt()
                 if (range.size > 1) end = range[1].toInt()
 
-                it.idClass.pokemonId in start..end
+                it.infoClass.id in start..end
             } else {
                 false
             }
@@ -138,6 +138,7 @@ class SearchViewModel @Inject constructor(
                 pokemonDao.insertFavorite(Favorite(pokemon = pokemon))
             }
             pokemonDao.updatePokemon(pokemon.id, (if (pokemon.idClass.isFavorite) 1 else 0))
+            pokemonDao.insertPokemon(listOf(pokemon))
         }
     }
 

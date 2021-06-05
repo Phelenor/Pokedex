@@ -1,4 +1,4 @@
-package com.rafaelboban.pokedex.ui
+package com.rafaelboban.pokedex.ui.bottom_nav
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rafaelboban.pokedex.databinding.FragmentFavoritesBinding
+import com.rafaelboban.pokedex.ui.PokemonActivity
 import com.rafaelboban.pokedex.ui.adapters.FavoritesAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.FavoritesViewModel
 import com.rafaelboban.pokedex.utils.ACTIVITY_STARTED_ID

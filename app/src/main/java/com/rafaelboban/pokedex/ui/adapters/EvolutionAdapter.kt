@@ -18,7 +18,10 @@ import com.rafaelboban.pokedex.utils.getSprite
 
 class EvolutionAdapter(
     private val evolutions: List<Pair<Pokemon, Int>>,
-    private val types: List<TypeFull>
+    private val types: List<TypeFull>,
+    private val onNextClick: (Int) -> Unit,
+    private val onPokemonClick: (Pokemon) -> Unit,
+    private val onTypeClick: (TypeFull) -> Unit
 ) :
     RecyclerView.Adapter<EvolutionAdapter.EvolutionViewHolder>() {
 
@@ -48,6 +51,10 @@ class EvolutionAdapter(
             holder.binding.levelNum.isVisible = false
             holder.binding.evolutionCard.strokeColor =
                 holder.binding.root.resources.getColor(R.color.cold_gray)
+        } else {
+            holder.binding.evolutionCard.setOnClickListener {
+                onPokemonClick(evolution.first)
+            }
         }
 
         holder.binding.apply {
@@ -62,15 +69,20 @@ class EvolutionAdapter(
                 if (name.language.url.extractLangId() == langId) {
                     pokemonName.text = name.name.capitalize()
                     break
-                } else if (Constants.LANG_ENGLISH_ID == langId) {
+                } else if (Constants.LANG_ENGLISH_ID == name.language.url.extractLangId()) {
                     pokemonName.text = name.name.capitalize()
                 }
             }
 
             val typesInfo = evolution.first.infoClass.types
-            for (typeName in types) {
-                if (typeName.name == typesInfo[0].type.name) {
-                    for (name in typeName.names) {
+            for (typeFull in types) {
+                if (typeFull.name == typesInfo[0].type.name) {
+
+                    typeFirstButton.setOnClickListener {
+                        onTypeClick(typeFull)
+                    }
+
+                    for (name in typeFull.names) {
                         if (name.language.url.extractLangId() == langId) {
                             typeFirstButton.text = name.name.capitalize()
                             typeFirstButton.backgroundTintList =
@@ -80,7 +92,7 @@ class EvolutionAdapter(
                                 )
                             typeFirst.isVisible = true
                             break
-                        } else if (Constants.LANG_ENGLISH_ID == langId) {
+                        } else if (Constants.LANG_ENGLISH_ID == name.language.url.extractLangId()) {
                             typeFirstButton.text = name.name.capitalize()
                             typeFirstButton.backgroundTintList =
                                 ContextCompat.getColorStateList(
@@ -91,9 +103,14 @@ class EvolutionAdapter(
                         }
                     }
                 }
-                if (typesInfo.size > 1 && typeName.name == typesInfo[1].type.name) {
-                    for (name in typeName.names) {
+                if (typesInfo.size > 1 && typeFull.name == typesInfo[1].type.name) {
+                    for (name in typeFull.names) {
                         if (name.language.url.extractLangId() == langId) {
+
+                            typeSecondButton.setOnClickListener {
+                                onTypeClick(typeFull)
+                            }
+
                             typeSecondButton.text = name.name.capitalize()
                             typeSecondButton.backgroundTintList =
                                 ContextCompat.getColorStateList(
@@ -102,7 +119,7 @@ class EvolutionAdapter(
                                 )
                             typeSecond.isVisible = true
                             break
-                        } else if (Constants.LANG_ENGLISH_ID == langId) {
+                        } else if (Constants.LANG_ENGLISH_ID == name.language.url.extractLangId()) {
                             typeSecondButton.text = name.name.capitalize()
                             typeSecondButton.backgroundTintList =
                                 ContextCompat.getColorStateList(
@@ -115,6 +132,12 @@ class EvolutionAdapter(
                 }
 
                 if (typesInfo.size <= 1) typeTable.setColumnCollapsed(1, true)
+            }
+
+
+            nextArrow.setOnClickListener {
+                if (position == evolutions.lastIndex) onNextClick(position)
+                else onNextClick(position + 1)
             }
 
             if (evolution.second == 0) levelNum.isVisible = false

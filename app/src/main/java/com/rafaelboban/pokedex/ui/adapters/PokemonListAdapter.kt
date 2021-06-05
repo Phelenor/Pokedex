@@ -73,7 +73,7 @@ class PokemonListAdapter(
             val preferences =
                 binding.root.context.getSharedPreferences(PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
             binding.apply {
-                pokemonImage.load(pokemonBase.getSprite()) {
+                pokemonImage.load(pokemon.getSprite()) {
                     placeholder(R.drawable.pokemon_placeholder)
                     error(R.drawable.pokemon_placeholder_error)
                 }
@@ -101,13 +101,13 @@ class PokemonListAdapter(
                     if (name.language.url.extractLangId() == langId) {
                         pokemonName.text = name.name.capitalize()
                         break
-                    } else if (Constants.LANG_ENGLISH_ID == langId) {
+                    } else if (Constants.LANG_ENGLISH_ID == name.language.url.extractLangId()) {
                         pokemonName.text = name.name.capitalize()
                     }
                 }
 
 
-                pokemonId.text = "%03d".format(pokemon.id)
+                pokemonId.text = "%03d".format(pokemon.infoClass.id)
 
                 binding.pokemonCard.setOnClickListener {
                     onPokemonClick(pokemon)
