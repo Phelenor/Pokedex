@@ -4,11 +4,15 @@ import androidx.paging.PagingData
 import androidx.paging.filter
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.PokemonId
 import com.rafaelboban.pokedex.model.Type
 import com.rafaelboban.pokedex.model.TypeFull
 
-fun String.extractPokemonId(): Int =
+fun String.extractPokemonSpeciesId(): Int =
     this.substringAfter("pokemon-species").replace("/", "").toInt()
+
+fun String.extractPokemonId(): Int =
+    this.substringAfter("pokemon").replace("/", "").toInt()
 
 fun String.extractLangId(): Int =
     this.substringAfter("language").replace("/", "").toInt()
@@ -19,7 +23,7 @@ fun String.extractGeneration(): Int =
 fun String.extractEvolutionId(): Int =
     this.substringAfter("evolution-chain").replace("/", "").toInt()
 
-// fun PokemonId.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.pokemonId}.png"
+fun PokemonId.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.url.extractPokemonId()}.png"
 
 fun Pokemon.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.infoClass.id}.png"
 

@@ -17,7 +17,7 @@ import com.rafaelboban.pokedex.utils.Constants.NETWORK_PAGE_SIZE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_STARTING_PAGE_INDEX
 import com.rafaelboban.pokedex.utils.PAGE_FETCHING
-import com.rafaelboban.pokedex.utils.extractPokemonId
+import com.rafaelboban.pokedex.utils.extractPokemonSpeciesId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -83,13 +83,13 @@ class PokemonRemoteMediator(
 
                 val fetchSpecieInfo = pokemonPaged.map { pokemonId ->
                     async(Dispatchers.IO) {
-                        apiService.getPokemonSpecieInfo(pokemonId.url.extractPokemonId())
+                        apiService.getPokemonSpecieInfo(pokemonId.url.extractPokemonSpeciesId())
                     }
                 }
 
                 val fetchPokemonInfo = pokemonPaged.map { pokemonId ->
                     async(Dispatchers.IO) {
-                        apiService.getPokemonInfo(pokemonId.url.extractPokemonId())
+                        apiService.getPokemonInfo(pokemonId.url.extractPokemonSpeciesId())
                     }
                 }
 
@@ -99,7 +99,12 @@ class PokemonRemoteMediator(
 
             val pokemon = mutableListOf<Pokemon>()
 
+            val favorites = pokemonDao.getFavorites().map { it.pokemon.idClass.name }
+
             for (i in pokemonPaged.indices) {
+                if (pokemonPaged[i].name in favorites) {
+                    pokemonPaged[i].isFavorite = true
+                }
                 pokemon.add(
                     Pokemon(
                         pokemonInfo[i].id,

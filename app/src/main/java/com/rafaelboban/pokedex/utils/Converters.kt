@@ -33,7 +33,7 @@ class Converters {
     fun moveJsonToList(value: String) = Gson().fromJson(value, Array<Move>::class.java).toList()
 
     @TypeConverter
-    fun pokemonIdJsonToList(value: String) = Gson().fromJson(value, Array<PokemonId>::class.java).toList()
+    fun typePokemonJsonToList(value: String) = Gson().fromJson(value, Array<TypePokemon>::class.java).toList()
 
     @TypeConverter
     fun typeJsonToList(value: String) = Gson().fromJson(value, Array<Type>::class.java).toList()

@@ -15,5 +15,5 @@ data class TypeFull(
     @ColumnInfo(name = "type-name") val name: String,
     val names: List<Name>,
     // @Embedded val move_damage_class: MoveDamageClass,
-    val pokemon: List<PokemonId>
+    val pokemon: List<TypePokemon>
 ) : Serializable

@@ -19,7 +19,9 @@ import com.rafaelboban.pokedex.ui.TypeActivity
 import com.rafaelboban.pokedex.ui.langId
 import com.rafaelboban.pokedex.ui.viewmodels.TypeViewModel
 import com.rafaelboban.pokedex.utils.Constants
+import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
 import com.rafaelboban.pokedex.utils.extractLangId
+import com.rafaelboban.pokedex.utils.extractPokemonId
 import com.rafaelboban.pokedex.utils.getColor
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DamageFragment(val type: TypeFull) : Fragment() {
 
     lateinit var binding: FragmentDamageBinding
-    val viewModel: TypeViewModel by activityViewModels()
+    private val viewModel: TypeViewModel by activityViewModels()
 
     lateinit var types: List<TypeFull>
 
@@ -36,6 +38,10 @@ class DamageFragment(val type: TypeFull) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDamageBinding.inflate(layoutInflater)
+
+        viewModel.fetchPokemon(type.pokemon.map { it.pokemon }
+            .filter { it.url.extractPokemonId() <= POKEMON_LIST_SIZE })
+
         setupObservers()
 
         return binding.root
@@ -61,7 +67,11 @@ class DamageFragment(val type: TypeFull) : Fragment() {
         displayNoDamageFrom()
     }
 
-    private fun setupTypeButtons(typeButton: MaterialButton, toTypes: List<Type>, typeIndex: Int): Int {
+    private fun setupTypeButtons(
+        typeButton: MaterialButton,
+        toTypes: List<Type>,
+        typeIndex: Int
+    ): Int {
         if (typeIndex < toTypes.size) {
             for (typeFull in types) {
                 if (typeFull.name == toTypes[typeIndex].name) {

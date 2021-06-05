@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.ActivityTypeBinding
@@ -58,8 +57,6 @@ class TypeActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener {
             this.onBackPressed()
         }
-
-        val x = MaterialButton(this)
 
         supportActionBar?.title = ""
         supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(type.getColor())))
