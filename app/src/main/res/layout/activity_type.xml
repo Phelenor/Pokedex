@@ -66,7 +66,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:tabIndicatorColor="@color/surface_0"
         app:tabSelectedTextColor="@color/surface_0"
-        app:tabTextColor="#cceaf4fc"
+        app:tabTextColor="#99eaf4fc"
         android:clipToPadding="false"
         app:tabMode="scrollable">
 

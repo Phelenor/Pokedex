@@ -188,7 +188,7 @@ class SearchViewModel @Inject constructor(
                         apiService.getTypeFull(it)
                     }
                 }.awaitAll()
-                Log.d("TYPES", types.map {it.pokemon }.toString())
+
                 pokemonDao.insertTypes(types)
             }
         }

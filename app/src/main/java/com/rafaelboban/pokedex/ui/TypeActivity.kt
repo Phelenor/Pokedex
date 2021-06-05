@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayoutMediator
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.ActivityTypeBinding
@@ -14,12 +15,14 @@ import com.rafaelboban.pokedex.utils.Constants
 import com.rafaelboban.pokedex.utils.Constants.LANG_ENGLISH_ID
 import com.rafaelboban.pokedex.utils.extractLangId
 import com.rafaelboban.pokedex.utils.getColor
+import dagger.hilt.android.AndroidEntryPoint
 import kotlin.properties.Delegates
 
 lateinit var binding: ActivityTypeBinding
 lateinit var type: TypeFull
 var langId by Delegates.notNull<Int>()
 
+@AndroidEntryPoint
 class TypeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +40,7 @@ class TypeActivity : AppCompatActivity() {
 
         type = intent.getSerializableExtra(Constants.EXTRA_TYPE) as TypeFull
 
-        binding.viewPager.adapter = ViewPagerAdapter(this)
+        binding.viewPager.adapter = ViewPagerAdapter(this, type)
 
         setupToolbar()
 
@@ -49,13 +52,14 @@ class TypeActivity : AppCompatActivity() {
                 else -> ""
             }
         }.attach()
-
     }
 
     private fun setupToolbar() {
         binding.backButton.setOnClickListener {
             this.onBackPressed()
         }
+
+        val x = MaterialButton(this)
 
         supportActionBar?.title = ""
         supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(type.getColor())))

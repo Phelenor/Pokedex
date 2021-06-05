@@ -103,14 +103,15 @@ class EvolutionAdapter(
                         }
                     }
                 }
+
                 if (typesInfo.size > 1 && typeFull.name == typesInfo[1].type.name) {
                     for (name in typeFull.names) {
+
+                        typeSecondButton.setOnClickListener {
+                            onTypeClick(typeFull)
+                        }
+
                         if (name.language.url.extractLangId() == langId) {
-
-                            typeSecondButton.setOnClickListener {
-                                onTypeClick(typeFull)
-                            }
-
                             typeSecondButton.text = name.name.capitalize()
                             typeSecondButton.backgroundTintList =
                                 ContextCompat.getColorStateList(

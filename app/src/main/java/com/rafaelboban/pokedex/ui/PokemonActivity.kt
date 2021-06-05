@@ -231,7 +231,7 @@ class PokemonActivity : AppCompatActivity() {
 
                 binding.typeFirst.setOnClickListener {
                     val intent = Intent(this, TypeActivity::class.java).apply {
-                        putExtra(Constants.EXTRA_TYPE, typeFull)
+                        putExtra(EXTRA_TYPE, typeFull)
                     }
                     startActivity(intent)
                 }

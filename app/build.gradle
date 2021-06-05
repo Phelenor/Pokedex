@@ -86,4 +86,7 @@ dependencies {
 
     // ProgressBar
     implementation "com.github.skydoves:progressview:1.1.1"
+
+    // FlexBox
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 }

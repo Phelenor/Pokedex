@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/materialCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="#3312ca5d"
+    android:minHeight="64dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tv_offensive">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="64dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/opaque_bar"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:background="@color/success"
+            android:minHeight="64dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/damage_multiplier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:lineHeight="24sp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/empty_state"
+            style="@style/Headline3ColdGrayLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="72dp"
+            android:text="@string/none"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/flexbox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="72dp"
+            android:layout_marginEnd="4dp"
+            android:orientation="horizontal"
+            app:flexWrap="wrap"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_1"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_2"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_3"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_4"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_5"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_6"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_7"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_8"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_9"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/type_10"
+                style="@style/Headline3Surface1Left"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="@color/flat_pokemon_type_grass"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_flexShrink="0.0"
+                app:shapeAppearanceOverlay="@style/TypeButtonTheme" />
+
+
+        </com.google.android.flexbox.FlexboxLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
