@@ -42,17 +42,22 @@ class PokemonFragment : Fragment() {
         if (bundle != null) type = bundle.getSerializable(EXTRA_TYPE) as TypeFull
 
         adapter = TypePokemonAdapter(listOf(),
-        onPokemonClick = { pokemon ->
-            ACTIVITY_STARTED_ID = pokemon.id
-            val intent = Intent(requireContext(), PokemonActivity::class.java).apply {
-                putExtra(Constants.EXTRA_POKEMON, pokemon)
-            }
-            startActivity(intent)
-        })
+            onPokemonClick = { pokemon ->
+                ACTIVITY_STARTED_ID = pokemon.id
+                val intent = Intent(requireContext(), PokemonActivity::class.java).apply {
+                    putExtra(Constants.EXTRA_POKEMON, pokemon)
+                }
+                startActivity(intent)
+            })
 
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.recyclerView.addItemDecoration(ItemOffsetDecoration(requireContext(), R.dimen.item_offset))
+        binding.recyclerView.addItemDecoration(
+            ItemOffsetDecoration(
+                requireContext(),
+                R.dimen.item_offset
+            )
+        )
 
         setupObservers()
         checkConnection()
@@ -61,7 +66,8 @@ class PokemonFragment : Fragment() {
     }
 
     private fun checkConnection() {
-        val cm = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
         val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
 
@@ -101,7 +107,6 @@ class PokemonFragment : Fragment() {
             }
         })
     }
-
 
     companion object {
         @JvmStatic

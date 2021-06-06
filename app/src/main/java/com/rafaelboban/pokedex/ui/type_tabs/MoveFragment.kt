@@ -16,6 +16,8 @@ import com.rafaelboban.pokedex.model.TypeFull
 import com.rafaelboban.pokedex.ui.adapters.MovesAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.TypeViewModel
 import com.rafaelboban.pokedex.utils.Constants.EXTRA_TYPE
+import com.rafaelboban.pokedex.utils.Constants.SORT_ASCENDING
+import com.rafaelboban.pokedex.utils.Constants.SORT_DESCENDING
 
 class MoveFragment : Fragment() {
 
@@ -24,7 +26,7 @@ class MoveFragment : Fragment() {
     lateinit var adapter: MovesAdapter
     lateinit var type: TypeFull
 
-    var sortDirection = "ASC"
+    var sortDirection = SORT_ASCENDING
     var sortingByMarker = "GEN"
 
     override fun onCreateView(
@@ -48,7 +50,8 @@ class MoveFragment : Fragment() {
     }
 
     private fun checkConnection() {
-        val cm = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
         val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
 
@@ -68,11 +71,11 @@ class MoveFragment : Fragment() {
                         "generation-"
                     ).uppercase()
                 }
-                if (sortingByMarker == "GEN" && sortDirection == "ASC") {
+                if (sortingByMarker == "GEN" && sortDirection == SORT_ASCENDING) {
                     sorted = sorted.reversed()
-                    sortDirection = "DESC"
+                    sortDirection = SORT_DESCENDING
                 } else {
-                    sortDirection = "ASC"
+                    sortDirection = SORT_ASCENDING
                 }
                 sortingByMarker = "GEN"
                 adapter.setMovesList(sorted)
@@ -85,11 +88,11 @@ class MoveFragment : Fragment() {
                 var sorted = viewModel.moves.value!!.sortedBy {
                     it.name
                 }
-                if (sortingByMarker == "NAME" && sortDirection == "ASC") {
+                if (sortingByMarker == "NAME" && sortDirection == SORT_ASCENDING) {
                     sorted = sorted.reversed()
-                    sortDirection = "DESC"
+                    sortDirection = SORT_DESCENDING
                 } else {
-                    sortDirection = "ASC"
+                    sortDirection = SORT_ASCENDING
                 }
                 sortingByMarker = "NAME"
                 adapter.setMovesList(sorted)
@@ -102,11 +105,11 @@ class MoveFragment : Fragment() {
                 var sorted = viewModel.moves.value!!.sortedBy {
                     it.power
                 }
-                if (sortingByMarker == "POWER" && sortDirection == "ASC") {
+                if (sortingByMarker == "POWER" && sortDirection == SORT_ASCENDING) {
                     sorted = sorted.reversed()
-                    sortDirection = "DESC"
+                    sortDirection = SORT_DESCENDING
                 } else {
-                    sortDirection = "ASC"
+                    sortDirection = SORT_ASCENDING
                 }
                 sortingByMarker = "POWER"
                 adapter.setMovesList(sorted)
@@ -119,11 +122,11 @@ class MoveFragment : Fragment() {
                 var sorted = viewModel.moves.value!!.sortedBy {
                     it.pp
                 }
-                if (sortingByMarker == "PP" && sortDirection == "ASC") {
+                if (sortingByMarker == "PP" && sortDirection == SORT_ASCENDING) {
                     sorted = sorted.reversed()
-                    sortDirection = "DESC"
+                    sortDirection = SORT_DESCENDING
                 } else {
-                    sortDirection = "ASC"
+                    sortDirection = SORT_ASCENDING
                 }
                 sortingByMarker = "PP"
                 adapter.setMovesList(sorted)
@@ -138,11 +141,11 @@ class MoveFragment : Fragment() {
                         it.damage_class.name
                     else it.name
                 }
-                if (sortingByMarker == "CATEGORY" && sortDirection == "ASC") {
+                if (sortingByMarker == "CATEGORY" && sortDirection == SORT_ASCENDING) {
                     sorted = sorted.reversed()
-                    sortDirection = "DESC"
+                    sortDirection = SORT_DESCENDING
                 } else {
-                    sortDirection = "ASC"
+                    sortDirection = SORT_ASCENDING
                 }
                 sortingByMarker = "CATEGORY"
                 adapter.setMovesList(sorted)

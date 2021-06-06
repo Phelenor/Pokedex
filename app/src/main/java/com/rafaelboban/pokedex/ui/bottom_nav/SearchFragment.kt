@@ -169,6 +169,9 @@ class SearchFragment : Fragment() {
     private fun setupObservers() {
         viewModel.pokemon.observe(viewLifecycleOwner) {
             adapter.submitData(viewLifecycleOwner.lifecycle, it)
+
+            // viewModel.fetchTypes()
+            // viewModel.setupLanguages()
         }
     }
 }

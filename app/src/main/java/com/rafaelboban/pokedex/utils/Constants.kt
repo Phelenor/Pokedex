@@ -18,4 +18,7 @@ object Constants {
     const val EXTRA_TYPE = "Type"
     const val KG_TO_LBS = 2.20462262
     const val METER_TO_IN = 39.3700787
+
+    const val SORT_ASCENDING = "Ascending"
+    const val SORT_DESCENDING = "Descending"
 }

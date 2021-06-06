@@ -240,7 +240,7 @@ class DamageFragment : Fragment() {
     private fun onTypeClick(type: TypeFull) {
         if (type.name != this.type.name) {
             val intent = Intent(requireContext(), TypeActivity::class.java).apply {
-                putExtra(Constants.EXTRA_TYPE, type)
+                putExtra(EXTRA_TYPE, type)
             }
             startActivity(intent)
         }

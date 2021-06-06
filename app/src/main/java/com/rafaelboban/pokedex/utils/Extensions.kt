@@ -61,7 +61,8 @@ fun MoveInfo.getMaxPP() =
         else -> 1
     }
 
-fun Pokemon.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.infoClass.id}.png"
+fun Pokemon.getSprite() =
+    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.infoClass.id}.png"
 
 fun Int.toRoman() =
     when (this) {
@@ -100,7 +101,7 @@ fun Type.getColor() =
         "normal" -> R.color.flat_pokemon_type_normal
         "electric" -> R.color.flat_pokemon_type_undefined
         else -> R.color.black
-}
+    }
 
 
 fun TypeFull.getColor() =
