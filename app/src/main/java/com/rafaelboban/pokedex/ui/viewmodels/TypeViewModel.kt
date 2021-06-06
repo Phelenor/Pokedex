@@ -24,7 +24,6 @@ class TypeViewModel @Inject constructor(
 
     init {
         fetchTypes()
-        moves.value = listOf()
     }
 
     private val handler: CoroutineExceptionHandler by lazy {

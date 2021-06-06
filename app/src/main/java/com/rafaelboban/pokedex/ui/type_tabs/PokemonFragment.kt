@@ -18,20 +18,25 @@ import com.rafaelboban.pokedex.ui.adapters.TypePokemonAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.TypeViewModel
 import com.rafaelboban.pokedex.utils.ACTIVITY_STARTED_ID
 import com.rafaelboban.pokedex.utils.Constants
+import com.rafaelboban.pokedex.utils.Constants.EXTRA_TYPE
 import com.rafaelboban.pokedex.utils.ItemOffsetDecoration
 
 
-class PokemonFragment(val type: TypeFull) : Fragment() {
+class PokemonFragment() : Fragment() {
 
     lateinit var binding: FragmentPokemonBinding
     private val viewModel: TypeViewModel by activityViewModels()
     private lateinit var adapter: TypePokemonAdapter
+    lateinit var type: TypeFull
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPokemonBinding.inflate(layoutInflater)
+
+        val bundle = this.arguments
+        if (bundle != null) type = bundle.getSerializable(EXTRA_TYPE) as TypeFull
 
         adapter = TypePokemonAdapter(listOf(),
         onPokemonClick = { pokemon ->
@@ -84,6 +89,11 @@ class PokemonFragment(val type: TypeFull) : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(type: TypeFull) = PokemonFragment(type)
+        fun newInstance(type: TypeFull): PokemonFragment {
+            val pokemonFragment = PokemonFragment()
+            val bundle = Bundle().apply { putSerializable(EXTRA_TYPE, type) }
+            pokemonFragment.arguments = bundle
+            return pokemonFragment
+        }
     }
 }

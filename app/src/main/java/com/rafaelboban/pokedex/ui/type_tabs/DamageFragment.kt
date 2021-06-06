@@ -19,14 +19,16 @@ import com.rafaelboban.pokedex.ui.TypeActivity
 import com.rafaelboban.pokedex.ui.langId
 import com.rafaelboban.pokedex.ui.viewmodels.TypeViewModel
 import com.rafaelboban.pokedex.utils.*
+import com.rafaelboban.pokedex.utils.Constants.EXTRA_TYPE
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DamageFragment(val type: TypeFull) : Fragment() {
+class DamageFragment() : Fragment() {
 
     lateinit var binding: FragmentDamageBinding
     private val viewModel: TypeViewModel by activityViewModels()
+    lateinit var type: TypeFull
 
     lateinit var types: List<TypeFull>
 
@@ -35,6 +37,10 @@ class DamageFragment(val type: TypeFull) : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDamageBinding.inflate(layoutInflater)
+
+        val bundle = this.arguments
+        if (bundle != null) type = bundle.getSerializable(EXTRA_TYPE) as TypeFull
+
 
         viewModel.fetchPokemon(type.pokemon.map { it.pokemon }
             .filter { it.url.extractPokemonId() <= POKEMON_LIST_SIZE })
@@ -243,6 +249,11 @@ class DamageFragment(val type: TypeFull) : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(type: TypeFull) = DamageFragment(type)
+        fun newInstance(type: TypeFull): DamageFragment {
+            val damageFragment = DamageFragment()
+            val bundle = Bundle().apply { putSerializable(EXTRA_TYPE, type) }
+            damageFragment.arguments = bundle
+            return damageFragment
+        }
     }
 }

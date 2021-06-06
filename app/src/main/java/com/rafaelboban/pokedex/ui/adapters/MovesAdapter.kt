@@ -30,17 +30,22 @@ class MovesAdapter(
 
         holder.binding.apply {
 
-
             if (move.damage_class != null) {
                 tvCategory.text = move.damage_class.name.capitalize()
+                containerCategory.setBackgroundColor(root.resources.getColor(move.getCategoryTint()))
             } else {
                 tvCategory.text = root.resources.getString(R.string.varies)
+                containerCategory.setBackgroundColor(root.resources.getColor(R.color.success))
             }
 
-            containerCategory.setBackgroundColor(root.resources.getColor(move.getCategoryTint()))
             containerCategory.background.alpha = 102
 
-            tvPower.text = move.power.toString()
+            if (move.power == 0) {
+                tvPower.text = "-"
+            } else {
+                tvPower.text = move.power.toString()
+            }
+
             tvPp.text = root.resources.getString(
                 R.string.pp_format,
                 move.pp.toString(),
@@ -72,6 +77,7 @@ class MovesAdapter(
 
     fun setMovesList(moves: List<MoveInfo>) {
         this.moves = moves
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = moves.size

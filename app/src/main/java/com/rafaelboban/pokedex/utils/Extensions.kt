@@ -3,7 +3,10 @@ package com.rafaelboban.pokedex.utils
 import androidx.paging.PagingData
 import androidx.paging.filter
 import com.rafaelboban.pokedex.R
-import com.rafaelboban.pokedex.model.*
+import com.rafaelboban.pokedex.model.MoveInfo
+import com.rafaelboban.pokedex.model.Pokemon
+import com.rafaelboban.pokedex.model.Type
+import com.rafaelboban.pokedex.model.TypeFull
 
 fun String.extractPokemonSpeciesId(): Int =
     this.substringAfter("pokemon-species").replace("/", "").toInt()
@@ -36,9 +39,9 @@ fun MoveInfo.getGenerationTint(): Int =
         else -> R.color.flat_pokemon_type_fairy
     }
 
+
 fun MoveInfo.getCategoryTint(): Int =
-    when (this.name.capitalize()) {
-        "Varies" -> R.color.success
+    when (this.damage_class.name.capitalize()) {
         "Physical" -> R.color.error
         "Status" -> R.color.dark_alpha
         "Special" -> R.color.cold_gray
@@ -57,8 +60,6 @@ fun MoveInfo.getMaxPP() =
         40 -> 64
         else -> 1
     }
-
-fun PokemonId.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.url.extractPokemonId()}.png"
 
 fun Pokemon.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.infoClass.id}.png"
 
