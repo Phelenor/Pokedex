@@ -1,9 +1,13 @@
 package com.rafaelboban.pokedex.ui.type_tabs
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +17,7 @@ import com.rafaelboban.pokedex.ui.adapters.MovesAdapter
 import com.rafaelboban.pokedex.ui.viewmodels.TypeViewModel
 import com.rafaelboban.pokedex.utils.Constants.EXTRA_TYPE
 
-class MoveFragment() : Fragment() {
+class MoveFragment : Fragment() {
 
     val viewModel: TypeViewModel by activityViewModels()
     lateinit var binding: FragmentMoveBinding
@@ -38,7 +42,22 @@ class MoveFragment() : Fragment() {
 
         setupObservers()
         setupListeners()
+        checkConnection()
+
         return binding.root
+    }
+
+    private fun checkConnection() {
+        val cm = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+
+        if (!isConnected) {
+            binding.progressBar.isVisible = false
+            binding.header.isVisible = false
+            binding.networkError.isVisible = true
+            binding.errorMessage.isVisible = true
+        }
     }
 
     private fun setupListeners() {

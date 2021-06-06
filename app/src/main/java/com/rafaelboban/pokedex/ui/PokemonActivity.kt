@@ -2,9 +2,12 @@ package com.rafaelboban.pokedex.ui
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -16,9 +19,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.android.material.snackbar.Snackbar
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.ActivityPokemonBinding
 import com.rafaelboban.pokedex.databinding.DialogPokemonBinding
+import com.rafaelboban.pokedex.databinding.LayoutSnackbarBinding
 import com.rafaelboban.pokedex.model.Pokemon
 import com.rafaelboban.pokedex.model.TypeFull
 import com.rafaelboban.pokedex.ui.adapters.EvolutionAdapter
@@ -108,8 +113,34 @@ class PokemonActivity : AppCompatActivity() {
         setupListeners()
         displayAbilityGrid()
         displayStatsCard()
+        checkConnection()
 
         setContentView(binding.root)
+    }
+
+    private fun checkConnection() {
+        val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+
+        if (!isConnected) {
+            binding.evolutionProgress.isVisible = false
+
+            val sb =
+                Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
+            sb.view.setBackgroundColor(Color.TRANSPARENT);
+            val sbLayout = sb.view as Snackbar.SnackbarLayout
+            val sbBinding = LayoutSnackbarBinding.inflate(layoutInflater)
+            sbLayout.addView(sbBinding.root, 0)
+            sbBinding.message.text = getString(R.string.check_your_connection)
+            sbBinding.message.backgroundTintList =
+                ColorStateList.valueOf(resources.getColor(R.color.error))
+            sbBinding.snackbarClose.setOnClickListener {
+                sb.dismiss()
+            }
+            sb.show()
+
+        }
     }
 
     private fun displayEvolutionChain(evolutionsList: List<List<Pair<Pokemon, Int>>>) {

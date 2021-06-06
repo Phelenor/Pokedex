@@ -1,6 +1,9 @@
 package com.rafaelboban.pokedex.ui.type_tabs
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +25,7 @@ import com.rafaelboban.pokedex.utils.Constants.EXTRA_TYPE
 import com.rafaelboban.pokedex.utils.ItemOffsetDecoration
 
 
-class PokemonFragment() : Fragment() {
+class PokemonFragment : Fragment() {
 
     lateinit var binding: FragmentPokemonBinding
     private val viewModel: TypeViewModel by activityViewModels()
@@ -52,8 +55,21 @@ class PokemonFragment() : Fragment() {
         binding.recyclerView.addItemDecoration(ItemOffsetDecoration(requireContext(), R.dimen.item_offset))
 
         setupObservers()
+        checkConnection()
 
         return binding.root
+    }
+
+    private fun checkConnection() {
+        val cm = requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+
+        if (!isConnected) {
+            binding.progressBar.isVisible = false
+            binding.networkError.isVisible = true
+            binding.errorMessage.isVisible = true
+        }
     }
 
     private fun setupObservers() {

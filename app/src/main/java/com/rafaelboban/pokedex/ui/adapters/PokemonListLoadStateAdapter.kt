@@ -47,6 +47,7 @@ class PokemonListLoadStateAdapter(private val retry: () -> Unit) :
                 loadProgressbar.isVisible = loadState is LoadState.Loading
                 loadFetchingTv.isVisible = loadState is LoadState.Loading
                 buttonRetry.isVisible = loadState !is LoadState.Loading
+                loadFetchingPage.isVisible = loadState is LoadState.Loading
 
                 loadFetchingPage.text = binding.root.context.getString(
                     R.string.page_num,

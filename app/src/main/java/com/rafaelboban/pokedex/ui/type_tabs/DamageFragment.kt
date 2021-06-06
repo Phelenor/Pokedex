@@ -24,7 +24,7 @@ import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DamageFragment() : Fragment() {
+class DamageFragment : Fragment() {
 
     lateinit var binding: FragmentDamageBinding
     private val viewModel: TypeViewModel by activityViewModels()
@@ -40,7 +40,6 @@ class DamageFragment() : Fragment() {
 
         val bundle = this.arguments
         if (bundle != null) type = bundle.getSerializable(EXTRA_TYPE) as TypeFull
-
 
         viewModel.fetchPokemon(type.pokemon.map { it.pokemon }
             .filter { it.url.extractPokemonId() <= POKEMON_LIST_SIZE })
