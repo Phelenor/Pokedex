@@ -50,6 +50,7 @@ class PokemonActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         pokemon = intent.getSerializableExtra(EXTRA_POKEMON) as Pokemon
+        viewModel.checkFavoriteStatus(pokemon)
         viewModel.getEvolutionChain(pokemon)
 
         val preferences = getSharedPreferences(Constants.PREFERENCES_DEFAULT, Context.MODE_PRIVATE)
@@ -163,6 +164,18 @@ class PokemonActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
+        viewModel.fallbackFavoriteCheck.observe(this) {
+            pokemon.idClass.isFavorite = it
+            if (pokemon.idClass.isFavorite) {
+                binding.favoriteButton.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_star_1, null
+                    )
+                )
+            }
+        }
+
         viewModel.evolutions.observe(this) { evolutions ->
             if (types.isNotEmpty()) displayEvolutionChain(evolutions)
         }

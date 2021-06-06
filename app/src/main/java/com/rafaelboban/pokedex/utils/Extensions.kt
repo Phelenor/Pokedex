@@ -3,10 +3,7 @@ package com.rafaelboban.pokedex.utils
 import androidx.paging.PagingData
 import androidx.paging.filter
 import com.rafaelboban.pokedex.R
-import com.rafaelboban.pokedex.model.Pokemon
-import com.rafaelboban.pokedex.model.PokemonId
-import com.rafaelboban.pokedex.model.Type
-import com.rafaelboban.pokedex.model.TypeFull
+import com.rafaelboban.pokedex.model.*
 
 fun String.extractPokemonSpeciesId(): Int =
     this.substringAfter("pokemon-species").replace("/", "").toInt()
@@ -22,6 +19,44 @@ fun String.extractGeneration(): Int =
 
 fun String.extractEvolutionId(): Int =
     this.substringAfter("evolution-chain").replace("/", "").toInt()
+
+fun String.extractMoveId(): Int =
+    this.substringAfter("move").replace("/", "").toInt()
+
+fun MoveInfo.getGenerationTint(): Int =
+    when (this.generation.name.substringAfter("generation-").uppercase()) {
+        "I" -> R.color.flat_pokemon_type_grass
+        "II" -> R.color.flat_pokemon_type_bug
+        "III" -> R.color.flat_pokemon_type_undefined
+        "IV" -> R.color.flat_pokemon_type_ghost
+        "V" -> R.color.flat_pokemon_type_water
+        "VI" -> R.color.flat_pokemon_type_fighting
+        "VII" -> R.color.flat_pokemon_type_fire
+        "VIII" -> R.color.flat_pokemon_type_poison
+        else -> R.color.flat_pokemon_type_fairy
+    }
+
+fun MoveInfo.getCategoryTint(): Int =
+    when (this.name.capitalize()) {
+        "Varies" -> R.color.success
+        "Physical" -> R.color.error
+        "Status" -> R.color.dark_alpha
+        "Special" -> R.color.cold_gray
+        else -> R.color.success
+    }
+
+fun MoveInfo.getMaxPP() =
+    when (this.pp) {
+        5 -> 8
+        10 -> 16
+        15 -> 24
+        20 -> 32
+        25 -> 40
+        30 -> 48
+        35 -> 56
+        40 -> 64
+        else -> 1
+    }
 
 fun PokemonId.getSprite() = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.url.extractPokemonId()}.png"
 
@@ -62,9 +97,10 @@ fun Type.getColor() =
         "dragon" -> R.color.flat_pokemon_type_dragon
         "ice" -> R.color.flat_pokemon_type_ice
         "normal" -> R.color.flat_pokemon_type_normal
-        "electric" -> R.color.flat_pokemon_type_electric
+        "electric" -> R.color.flat_pokemon_type_undefined
         else -> R.color.black
 }
+
 
 fun TypeFull.getColor() =
     when (this.name) {

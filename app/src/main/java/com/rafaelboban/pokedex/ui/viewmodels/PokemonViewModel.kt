@@ -22,6 +22,7 @@ class PokemonViewModel @Inject constructor(
 
     val evolutions = MutableLiveData<List<List<Pair<Pokemon, Int>>>>()
     val types = MutableLiveData<List<TypeFull>>()
+    val fallbackFavoriteCheck = MutableLiveData<Boolean>()
 
     init {
         viewModelScope.launch {
@@ -32,6 +33,15 @@ class PokemonViewModel @Inject constructor(
     private val handler: CoroutineExceptionHandler by lazy {
         CoroutineExceptionHandler { _, exception ->
             Log.e("COROUTINE_EXCEPTION", "$exception")
+        }
+    }
+
+    fun checkFavoriteStatus(pokemon: Pokemon) {
+        viewModelScope.launch {
+            if (pokemon.infoClass.id in pokemonDao.getFavorites().map { it.pokemon.infoClass }
+                    .map { it.id }) {
+                fallbackFavoriteCheck.value = true
+            }
         }
     }
 

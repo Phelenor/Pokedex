@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.rafaelboban.pokedex.R
 import com.rafaelboban.pokedex.databinding.FragmentPokemonBinding
 import com.rafaelboban.pokedex.model.TypeFull
@@ -54,7 +56,31 @@ class PokemonFragment(val type: TypeFull) : Fragment() {
             adapter.setPokemon(it)
             adapter.notifyDataSetChanged()
         }
+
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                super.onChanged()
+                checkEmpty()
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                super.onItemRangeRemoved(positionStart, itemCount)
+                checkEmpty()
+            }
+
+            fun checkEmpty() {
+                binding.apply {
+                    progressBar.isVisible = false
+                    networkError.visibility =
+                        if (adapter.itemCount == 0) View.VISIBLE else View.GONE
+                    recyclerView.visibility =
+                        if (adapter.itemCount > 0) View.VISIBLE else View.GONE
+
+                }
+            }
+        })
     }
+
 
     companion object {
         @JvmStatic

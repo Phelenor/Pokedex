@@ -36,4 +36,7 @@ interface ApiService {
 
     @GET("pokemon-species/{name}")
     suspend fun getPokemonSpecieByName(@Path("name") name: String): PokemonSpecie
+
+    @GET("move/{id}")
+    suspend fun getMove(@Path("id") id: Int): MoveInfo
 }

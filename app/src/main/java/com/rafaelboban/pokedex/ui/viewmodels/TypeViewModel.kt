@@ -19,10 +19,12 @@ class TypeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val types = MutableLiveData<List<TypeFull>>()
+    val moves = MutableLiveData<List<MoveInfo>>()
     val pokemon = MutableLiveData<List<Pokemon>>()
 
     init {
         fetchTypes()
+        moves.value = listOf()
     }
 
     private val handler: CoroutineExceptionHandler by lazy {
@@ -30,7 +32,6 @@ class TypeViewModel @Inject constructor(
             Log.e("COROUTINE_EXCEPTION", "$exception")
         }
     }
-
 
     private fun fetchTypes() {
         viewModelScope.launch {
@@ -82,6 +83,16 @@ class TypeViewModel @Inject constructor(
                 )
             }
             pokemon.value = pokemonList
+        }
+    }
+
+    fun fetchMoves(ids: List<Int>) {
+        viewModelScope.launch(handler) {
+            moves.value = ids.map {
+                async {
+                    apiService.getMove(it)
+                }
+            }.awaitAll()
         }
     }
 }

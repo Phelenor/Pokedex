@@ -39,6 +39,7 @@
     <string name="hp">HP:</string>
     <string name="fetching_more_pokemon">Loading Pokemon…</string>
     <string name="page_num">%1$s/%2$s</string>
+    <string name="pp_format">%1$s\n(max %2$s)</string>
     <string name="sprites">Sprites</string>
     <string name="ok">OK</string>
     <string name="pokedex_num">Pokedex Num</string>
@@ -47,6 +48,7 @@
     <string name="weight">WEIGHT</string>
     <string name="evolution">Evolution</string>
     <string name="unevolved">UNEVOLVED</string>
+    <string name="varies">Varies</string>
     <string name="first_evolution">1ST EVOLUTION</string>
     <string name="second_evolution">2ND EVOLUTION</string>
     <string name="level_format">Lv %1$s</string>
@@ -68,5 +70,6 @@
     <string name="types">Types</string>
     <string name="defensive">Defensive</string>
     <string name="none">None</string>
+    <string name="check_your_connection">Check your connection.</string>
 
 </resources>

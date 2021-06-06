@@ -18,11 +18,8 @@ import com.rafaelboban.pokedex.model.TypeFull
 import com.rafaelboban.pokedex.ui.TypeActivity
 import com.rafaelboban.pokedex.ui.langId
 import com.rafaelboban.pokedex.ui.viewmodels.TypeViewModel
-import com.rafaelboban.pokedex.utils.Constants
+import com.rafaelboban.pokedex.utils.*
 import com.rafaelboban.pokedex.utils.Constants.POKEMON_LIST_SIZE
-import com.rafaelboban.pokedex.utils.extractLangId
-import com.rafaelboban.pokedex.utils.extractPokemonId
-import com.rafaelboban.pokedex.utils.getColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,6 +38,8 @@ class DamageFragment(val type: TypeFull) : Fragment() {
 
         viewModel.fetchPokemon(type.pokemon.map { it.pokemon }
             .filter { it.url.extractPokemonId() <= POKEMON_LIST_SIZE })
+
+        viewModel.fetchMoves(type.moves.map { it.url.extractMoveId() })
 
         setupObservers()
 
