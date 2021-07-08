@@ -173,5 +173,11 @@ class SearchFragment : Fragment() {
             // viewModel.fetchTypes()
             // viewModel.setupLanguages()
         }
+
+//            viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+//                viewModel.pokemon.observe(viewLifecycleOwner) {
+//                    adapter.submitData(viewLifecycleOwner.lifecycle, it)
+//            }
+//        }
     }
 }
